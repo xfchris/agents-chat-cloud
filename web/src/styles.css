@@ -5,13 +5,21 @@
  * Fuentes del sistema a propósito: cero dependencias externas (offline-friendly).
  */
 
+/*
+ * Tema OSCURO por defecto ("signal room"): `:root` sin `data-theme` ya es oscuro.
+ * `:root[data-theme="light"]` (más abajo) redefine SOLO los tokens de color con la
+ * paleta clara. Todo color vive aquí como variable; ninguna regla usa hex/rgb suelto.
+ */
 :root {
+  color-scheme: dark;
+
   --ink: #0a0d13;
   --surface: #10151f;
   --surface-2: #161d2a;
   --raised: #1d2636;
   --line: #262f40;
   --line-soft: #1c2431;
+  --inset: #05070b;
 
   --text: #e4e9f1;
   --muted: #8794a8;
@@ -21,18 +29,62 @@
   --signal-strong: #4ff0d8;
   --signal-dim: #1c7d72;
   --signal-glow: rgba(47, 212, 189, 0.16);
+  --signal-wash: rgba(47, 212, 189, 0.08);
   --amber: #e6ac54;
   --danger: #e2565b;
   --live: #3ddc84;
+  --pulse-glow: rgba(61, 220, 132, 0.16);
 
   --me: #13241f;
   --me-line: #2e6b5e;
+
+  --on-signal: #04140f;
+  --shadow: rgba(0, 0, 0, 0.9);
 
   --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, sans-serif;
   --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
 
   --radius: 12px;
   --radius-sm: 8px;
+}
+
+/*
+ * Tema CLARO: misma identidad "signal room", pero superficies claras con jerarquía
+ * (base --ink / --surface / --surface-2 / --raised, líneas --line/--line-soft) y el
+ * acento teal oscurecido a un tono con contraste AA como texto sobre claro. Los
+ * teals de texto (--signal, --signal-strong) y los "on-signal"/estados se recalibran
+ * para superar 4.5:1 en mensajes, composer, roster, cabecera, popover y chips.
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --ink: #e9edf3;
+  --surface: #f7f9fc;
+  --surface-2: #ffffff;
+  --raised: #ffffff;
+  --line: #d2d9e3;
+  --line-soft: #e3e8ef;
+  --inset: #eef2f7;
+
+  --text: #18202e;
+  --muted: #55617a;
+  --faint: #667085;
+
+  --signal: #0f766e;
+  --signal-strong: #0b5d56;
+  --signal-dim: #0d9488;
+  --signal-glow: rgba(13, 148, 136, 0.28);
+  --signal-wash: rgba(15, 118, 110, 0.08);
+  --amber: #8a5000;
+  --danger: #c02626;
+  --live: #15803d;
+  --pulse-glow: rgba(21, 128, 61, 0.22);
+
+  --me: #d4f3ee;
+  --me-line: #7fd1c1;
+
+  --on-signal: #ecfeff;
+  --shadow: rgba(15, 23, 42, 0.18);
 }
 
 * {
@@ -60,7 +112,7 @@ body {
 code {
   font-family: var(--mono);
   font-size: 0.88em;
-  background: #05070b;
+  background: var(--inset);
   border: 1px solid var(--line-soft);
   padding: 1px 6px;
   border-radius: 5px;
@@ -92,6 +144,39 @@ code {
   border-color: var(--signal-dim);
 }
 
+/* ---------- Toggle de tema (control discreto, mismo peso que la topbar) ---------- */
+
+.theme-toggle {
+  cursor: pointer;
+  padding: 4px 9px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  color: var(--text);
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.theme-toggle .theme-icon {
+  display: inline-block;
+}
+
+.landing-theme {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+@media (max-width: 560px) {
+  .landing-theme {
+    top: 12px;
+    right: 12px;
+  }
+}
+
 /* ---------- Pulso "en vivo" (firma) ---------- */
 
 @keyframes pulse-ring {
@@ -109,12 +194,13 @@ code {
 /* ---------- Landing ---------- */
 
 .landing {
+  position: relative;
   min-height: 100%;
   display: grid;
   place-items: center;
   padding: 32px 20px;
   background:
-    radial-gradient(120% 80% at 50% -10%, rgba(47, 212, 189, 0.08), transparent 60%),
+    radial-gradient(120% 80% at 50% -10%, var(--signal-wash), transparent 60%),
     var(--ink);
 }
 
@@ -124,7 +210,7 @@ code {
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 36px 34px 34px;
-  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 24px 60px -30px var(--shadow);
 }
 
 .landing-title {
@@ -216,7 +302,7 @@ code {
 
 .btn-primary {
   background: var(--signal);
-  color: #04140f;
+  color: var(--on-signal);
   border: 0;
   border-radius: var(--radius-sm);
   padding: 13px 18px;
@@ -372,7 +458,7 @@ code {
   border: 1px solid var(--line);
   border-top: 2px solid var(--signal-dim);
   border-radius: var(--radius);
-  box-shadow: 0 20px 48px -24px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 20px 48px -24px var(--shadow);
 }
 
 .share-action {
@@ -420,7 +506,7 @@ code {
 .share-invite-text {
   width: 100%;
   resize: none;
-  background: #05070b;
+  background: var(--inset);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
   color: var(--signal-strong);
@@ -532,7 +618,7 @@ code {
   height: 7px;
   border-radius: 50%;
   background: var(--live);
-  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.16);
+  box-shadow: 0 0 0 3px var(--pulse-glow);
 }
 
 /* ---------- Registro de mensajes ---------- */
@@ -640,7 +726,7 @@ code {
 
 .composer-send {
   background: var(--signal);
-  color: #04140f;
+  color: var(--on-signal);
   border: 0;
   border-radius: var(--radius);
   padding: 0 20px;
@@ -690,6 +776,23 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .signal-connected {
     animation: none;
+  }
+}
+
+/* Transición suave de color al conmutar tema; se anula si el usuario reduce
+   movimiento (solo se declara bajo `no-preference`). Acotada a superficies
+   estructurales SIN estados hover/focus de color, para no arrastrar los tiempos
+   de los controles interactivos (inputs, chips, botones ya tienen su transición). */
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  .topbar,
+  .composer,
+  .presence,
+  .message,
+  .share-popover {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
   }
 }
 

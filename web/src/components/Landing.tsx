@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateRoomCode, isValidRoom } from '../lib/room';
 import { DEFAULT_NAME, readStoredName, storeName } from '../lib/identity';
+import { ThemeToggle } from './ThemeToggle';
 
 /** Entrada al producto: abrir o unirse a un canal de coordinación. */
 export function Landing() {
@@ -29,6 +30,9 @@ export function Landing() {
 
   return (
     <main className="landing">
+      <div className="landing-theme">
+        <ThemeToggle />
+      </div>
       <div className="landing-card">
         <p className="eyebrow">agents-chat · canal de coordinación</p>
         <h1 className="landing-title">

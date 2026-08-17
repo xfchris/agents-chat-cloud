@@ -10,6 +10,7 @@ import {
   storeName,
 } from '../../web/src/lib/identity';
 import { fetchBrief, fetchMessages, fetchPresence } from '../../web/src/lib/api';
+import { applyTheme, resolveTheme, storeTheme } from '../../web/src/lib/theme';
 import { makeMessage } from './helpers';
 
 describe('lib/room · generateRoomCode', () => {
@@ -148,6 +149,138 @@ describe('lib/identity · parseIdentity (humanos y fallbacks)', () => {
     expect(id.app).toBeUndefined();
     expect(id.suffix).toBeUndefined();
     expect(kindIcon(id)).toBe('👤');
+  });
+});
+
+describe('lib/theme · resolveTheme', () => {
+  // Instala un `matchMedia` mockeado que responde `matches` según `dark`.
+  function mockMatchMedia(dark: boolean) {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: dark,
+        media: query,
+        onchange: null,
+        addEventListener() {},
+        removeEventListener() {},
+        addListener() {},
+        removeListener() {},
+        dispatchEvent() {
+          return false;
+        },
+      })),
+    });
+  }
+
+  const originalMatchMedia = Object.getOwnPropertyDescriptor(window, 'matchMedia');
+
+  beforeEach(() => localStorage.clear());
+  afterEach(() => {
+    localStorage.clear();
+    if (originalMatchMedia) {
+      Object.defineProperty(window, 'matchMedia', originalMatchMedia);
+    } else {
+      // jsdom no trae matchMedia: lo eliminamos si lo instalamos en el test.
+      delete (window as unknown as { matchMedia?: unknown }).matchMedia;
+    }
+    vi.restoreAllMocks();
+  });
+
+  it('con localStorage["theme"]="light" devuelve "light" (ignora el sistema)', () => {
+    localStorage.setItem('theme', 'light');
+    mockMatchMedia(true); // sistema oscuro, pero manda la elección explícita
+    expect(resolveTheme()).toBe('light');
+  });
+
+  it('con localStorage["theme"]="dark" devuelve "dark" (ignora el sistema)', () => {
+    localStorage.setItem('theme', 'dark');
+    mockMatchMedia(false); // sistema claro, pero manda la elección explícita
+    expect(resolveTheme()).toBe('dark');
+  });
+
+  it('con valor corrupto ("azul") lo ignora y cae al sistema', () => {
+    localStorage.setItem('theme', 'azul');
+    mockMatchMedia(false);
+    expect(resolveTheme()).toBe('light');
+    localStorage.setItem('theme', 'azul');
+    mockMatchMedia(true);
+    expect(resolveTheme()).toBe('dark');
+  });
+
+  it('sin elección guardada sigue al sistema: prefers-color-scheme dark → "dark"', () => {
+    mockMatchMedia(true);
+    expect(resolveTheme()).toBe('dark');
+  });
+
+  it('sin elección guardada sigue al sistema: prefers-color-scheme light → "light"', () => {
+    mockMatchMedia(false);
+    expect(resolveTheme()).toBe('light');
+  });
+
+  it('sin matchMedia disponible cae al fallback "dark" (tema base)', () => {
+    delete (window as unknown as { matchMedia?: unknown }).matchMedia;
+    expect(resolveTheme()).toBe('dark');
+  });
+
+  it('si matchMedia lanza, no propaga y cae a "dark"', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockImplementation(() => {
+        throw new Error('boom');
+      }),
+    });
+    expect(() => resolveTheme()).not.toThrow();
+    expect(resolveTheme()).toBe('dark');
+  });
+
+  it('si localStorage.getItem lanza, no propaga y resuelve por el sistema', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('sin storage');
+    });
+    mockMatchMedia(false);
+    expect(() => resolveTheme()).not.toThrow();
+    expect(resolveTheme()).toBe('light');
+  });
+});
+
+describe('lib/theme · applyTheme', () => {
+  afterEach(() => {
+    delete document.documentElement.dataset.theme;
+  });
+
+  it('escribe data-theme="light" en la raíz del documento', () => {
+    applyTheme('light');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+  });
+
+  it('escribe data-theme="dark" en la raíz del documento', () => {
+    applyTheme('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
+  });
+});
+
+describe('lib/theme · storeTheme', () => {
+  beforeEach(() => localStorage.clear());
+  afterEach(() => {
+    localStorage.clear();
+    vi.restoreAllMocks();
+  });
+
+  it('persiste la elección en localStorage["theme"]', () => {
+    storeTheme('light');
+    expect(localStorage.getItem('theme')).toBe('light');
+    storeTheme('dark');
+    expect(localStorage.getItem('theme')).toBe('dark');
+  });
+
+  it('si setItem lanza (modo privado), falla en silencio sin propagar', () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceeded');
+    });
+    expect(() => storeTheme('light')).not.toThrow();
   });
 });
 
