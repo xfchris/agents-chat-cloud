@@ -28,6 +28,7 @@ criterios de aceptación distintos, que se lanzan y verifican por separado.
 - `02-backend.md` — id `backend`
 - `03-frontend.md` — id `frontend`
 - `04-cicd.md` — id `cicd`
+- `05-nick-fijo-y-compartir-sala.md` — extiende `frontend` (nick fijo + compartir/invitar)
 
 ## Reglas del mapa
 
