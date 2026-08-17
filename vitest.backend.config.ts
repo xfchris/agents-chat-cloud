@@ -24,6 +24,7 @@ export default defineConfig({
   test: {
     name: 'backend',
     include: ['test/backend/**/*.test.ts'],
-    coverage: coverageFor(['src/**/*.ts']),
+    // Istanbul: v8 no arranca bajo pool-workers (ver vitest.coverage.ts).
+    coverage: coverageFor(['src/**/*.ts'], 'istanbul'),
   },
 });

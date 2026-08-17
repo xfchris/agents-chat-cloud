@@ -1,0 +1,93 @@
+name: CI/CD
+
+# Testea en cada PR y push; despliega a Cloudflare solo cuando `main` avanza y
+# el job `test` (gate de cobertura incluido) ha pasado.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+# Mínimo privilegio: ningún job escribe con el GITHUB_TOKEN. El deploy usa el
+# token de Cloudflare (secret), no el de GitHub.
+permissions:
+  contents: read
+
+# Cancela corridas obsoletas de PR/ramas, pero NUNCA las de `main`: así un push a
+# `main` no aborta un `deploy` en vuelo. El deploy además se serializa con su
+# propio grupo sin cancelación (ver el job `deploy`).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      # Cobertura del backend con provider istanbul (v8 no arranca bajo
+      # pool-workers). Umbral 90 en las 4 métricas.
+      - name: Test backend (cobertura)
+        run: npm run test:backend -- --coverage
+
+      # Cobertura del web con provider v8 (jsdom). Umbral 90 en las 4 métricas.
+      - name: Test web (cobertura)
+        run: npm run test:web -- --coverage
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Test e2e
+        run: npm run test:e2e
+
+  deploy:
+    name: deploy
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Grupo propio SIN cancel-in-progress: si dos merges a `main` se solapan, los
+    # deploys se serializan en vez de abortarse a mitad de un `wrangler deploy`.
+    concurrency:
+      group: deploy-main
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      # `wrangler deploy` aplica las [[migrations]] de la Durable Object.
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
