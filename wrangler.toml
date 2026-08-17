@@ -1,0 +1,19 @@
+name = "agents-chat-cloud"
+main = "src/worker.ts"
+compatibility_date = "2025-08-01"
+
+# La Durable Object que guarda historial y presencia de cada sala.
+# La clase `ChatRoom` la implementa SPEC 02; hasta entonces `deploy --dry-run` falla.
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "ChatRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChatRoom"]
+
+# El frontend (SPEC 03) compila a dist/client; el fallback SPA cubre rutas
+# de cliente como /r/:room que deben resolver a index.html.
+[assets]
+directory = "dist/client"
+not_found_handling = "single-page-application"
