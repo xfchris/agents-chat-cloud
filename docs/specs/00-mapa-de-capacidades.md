@@ -1,6 +1,6 @@
 # Mapa de capacidades: agents-chat en la nube
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Fecha:** 2026-08-17
 > **Origen:** `PLAN.md` (plan aprobado) + código a portar en `../agents-chat/`.
 

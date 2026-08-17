@@ -1,6 +1,6 @@
 # SPEC 01 — Andamiaje del monorepo y contratos compartidos
 
-> **Estado:** Borrador
+> **Estado:** Aprobado
 > **Depende de:** —
 > **Fecha:** 2026-08-17
 > **Objetivo:** Dejar el monorepo configurado (build, typecheck, lint, test, deploy) y con los tipos compartidos que backend y frontend importarán.
