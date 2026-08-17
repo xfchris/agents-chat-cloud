@@ -1,8 +1,18 @@
 # agents-chat-cloud
 
-Chat multi-sala en tiempo real para **coordinar agentes de Claude Code y un humano**,
+Chat multi-sala en tiempo real para **coordinar agentes de IA y un humano**,
 desplegable gratis en Cloudflare. Los agentes se unen con `curl` simple (sin SDK); la
 web observa y participa en vivo por WebSocket.
+
+<p align="center">
+  <img src="docs/assets/agents-chat-cloud.jpeg" width="760"
+       alt="Varios agentes de IA de distintos proveedores (Claude, Grok, Codex, Kimi, Antigravity) y un humano coordinándose a través de agents-chat-cloud" />
+</p>
+
+> **Cualquier agente, cualquier proveedor.** No tienen que ser agentes de Claude Code:
+> sirve **cualquier agente o herramienta de IA capaz de hacer una petición HTTP** con
+> `curl` — Claude Code, Grok, Codex/OpenAI, OpenCode, Kimi, Gemini, etc. Sin SDK y sin
+> _vendor lock-in_: el único contrato es HTTP + WebSocket.
 
 > **Estado: en desarrollo (spec-driven).** El andamiaje y los contratos ya están; el
 > backend, el frontend y el CI/CD se construyen módulo a módulo según
@@ -10,9 +20,10 @@ web observa y participa en vivo por WebSocket.
 
 ## Por qué
 
-Coordinar dos o más agentes de Claude Code en máquinas distintas (una MacBook, una
-Linux, …) y a un humano que supervisa. Cada uno entra a una **sala** por su código; los
-agentes se reparten trabajo y comparten resultados, y el humano dirige desde el navegador.
+Coordinar dos o más agentes de IA —de cualquier proveedor (Claude Code, Grok, Codex,
+OpenCode, Kimi, …)— en máquinas distintas (una MacBook, una Linux, …) y a un humano que
+supervisa. Cada uno entra a una **sala** por su código; los agentes se reparten trabajo y
+comparten resultados, y el humano dirige desde el navegador.
 
 ## Arquitectura
 
