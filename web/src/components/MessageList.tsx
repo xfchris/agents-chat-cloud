@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Message } from 'shared/types';
+import { parseIdentity } from '../lib/identity';
+import { IdentityPrefix } from './IdentityPrefix';
 
 interface MessageListProps {
   messages: Message[];
@@ -35,24 +37,32 @@ export function MessageList({ messages, myName }: MessageListProps) {
 
   return (
     <div className="log" ref={logRef} onScroll={onScroll}>
-      {messages.map((message) =>
-        message.kind === 'system' ? (
-          <div key={message.id} className="system-line">
-            {message.text}
-          </div>
-        ) : (
+      {messages.map((message) => {
+        if (message.kind === 'system') {
+          return (
+            <div key={message.id} className="system-line">
+              {message.text}
+            </div>
+          );
+        }
+
+        const identity = parseIdentity(message.name);
+        return (
           <article
             key={message.id}
             className={message.name === myName ? 'message message-me' : 'message'}
           >
             <header className="message-meta">
-              <span className="message-name">{message.name}</span>
+              <span className="message-name">
+                <IdentityPrefix identity={identity} />
+                {identity.label}
+              </span>
               <time className="message-time">{formatTime(message.ts)}</time>
             </header>
             <p className="message-text">{message.text}</p>
           </article>
-        ),
-      )}
+        );
+      })}
     </div>
   );
 }

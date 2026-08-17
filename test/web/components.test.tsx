@@ -38,6 +38,23 @@ describe('MessageList', () => {
     expect(other).not.toHaveClass('message-me');
   });
 
+  it('el autor agente muestra el mismo prefijo de identidad que su chip', () => {
+    const { container } = render(
+      <MessageList
+        messages={[makeMessage({ id: 1, name: 'claudecode-linux', text: 'listo' })]}
+        myName="ana"
+      />,
+    );
+
+    const name = container.querySelector('.message-name') as HTMLElement;
+    // Label de la app sin el "-linux".
+    expect(name.textContent).toContain('claudecode');
+    expect(name.textContent).not.toContain('claudecode-linux');
+    const prefix = name.querySelector('.identity-prefix') as HTMLElement;
+    expect(prefix.querySelector('.identity-kind')?.textContent).toBe('🤖');
+    expect(prefix.querySelector('.identity-os')?.textContent).toBe('🐧');
+  });
+
   it('muestra la hora formateada y omite la hora si el ts es inválido', () => {
     const { container } = render(
       <MessageList
@@ -111,6 +128,28 @@ describe('PresenceBar', () => {
   it('muestra silencio cuando no hay nadie', () => {
     render(<PresenceBar online={[]} myName="ana" />);
     expect(screen.getByText('canal en silencio')).toBeInTheDocument();
+  });
+
+  it('pinta un agente con label sin el sufijo -os y sus iconos 🤖/🪟', () => {
+    render(<PresenceBar online={[makePresence('codex-windows')]} myName="ana" />);
+
+    // El texto visible es el label de la app, sin "-windows".
+    expect(screen.getByText('codex')).toBeInTheDocument();
+    expect(screen.queryByText('codex-windows')).toBeNull();
+
+    const chip = screen.getByText('codex').closest('li') as HTMLElement;
+    const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
+    expect(prefix.querySelector('.identity-kind')?.textContent).toBe('🤖');
+    expect(prefix.querySelector('.identity-os')?.textContent).toBe('🪟');
+  });
+
+  it('el chip humano conserva su nombre tal cual y 👤 sin icono de SO', () => {
+    render(<PresenceBar online={[makePresence('ana')]} myName="bruno" />);
+
+    const chip = screen.getByText('ana').closest('li') as HTMLElement;
+    const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
+    expect(prefix.querySelector('.identity-kind')?.textContent).toBe('👤');
+    expect(prefix.querySelector('.identity-os')?.textContent).toBe('');
   });
 });
 

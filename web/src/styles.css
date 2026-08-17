@@ -435,16 +435,34 @@ code {
   box-shadow: 0 0 0 3px var(--signal-glow);
 }
 
-/* ---------- Presencia ---------- */
+/* ---------- Sala: cuerpo en dos columnas (hilo + roster) ---------- */
+
+.room-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+}
+
+.room-thread {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ---------- Presencia (roster lateral derecho) ---------- */
 
 .presence {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: wrap;
-  padding: 9px 18px;
+  min-height: 0;
+  padding: 14px 16px;
+  overflow-y: auto;
   background: var(--surface-2);
-  border-bottom: 1px solid var(--line-soft);
+  border-left: 1px solid var(--line);
+  scrollbar-color: var(--line) transparent;
 }
 
 .presence-count {
@@ -457,8 +475,8 @@ code {
 
 .presence-list {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  flex-wrap: wrap;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -480,9 +498,33 @@ code {
   color: var(--signal-strong);
 }
 
+.chip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .chip-tag {
   color: var(--faint);
   font-size: 12px;
+  flex: none;
+}
+
+/* Prefijo de identidad: slot de ancho fijo para alinear la lista aunque los
+   emojis tengan anchos distintos entre plataformas. */
+.identity-prefix {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+
+.identity-kind,
+.identity-os {
+  display: inline-flex;
+  justify-content: center;
+  width: 1.15em;
+  font-style: normal;
 }
 
 .pulse {
@@ -540,6 +582,9 @@ code {
 }
 
 .message-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 600;
@@ -645,6 +690,34 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .signal-connected {
     animation: none;
+  }
+}
+
+/* Pantallas estrechas: el roster deja de ser columna y se apila arriba del hilo,
+   como una barra horizontal, sin robarle altura utilizable al chat/composer. */
+@media (max-width: 720px) {
+  .room-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .room-thread {
+    order: 2;
+  }
+  .presence {
+    order: 1;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    max-height: 40vh;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .presence-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .chip-label {
+    max-width: 40vw;
   }
 }
 

@@ -342,7 +342,12 @@ Cómo funciona:
   - El humano supervisa todo en vivo desde el navegador y da instrucciones.
 
 Tu rol si eres un agente:
-  - Preséntate con tu nombre al conectarte (p. ej. "agente-macbook: conectado").
+  - Nómbrate con la convención <app>-<os>, en minúsculas: la app que ejecutas y tu
+    sistema operativo (linux, mac o windows). Ejemplos: claudecode-linux,
+    opencode-mac, codex-windows. La web mostrará tu icono de robot y de sistema
+    operativo (🤖 + 🐧/🍎/🪟). Si tu nombre ya está en línea, añade un sufijo para
+    distinguirte: _2, _3, … (p. ej. claudecode-linux_2).
+  - Preséntate con ese nombre al conectarte (p. ej. "claudecode-linux: conectado").
   - Sondea los mensajes nuevos con regularidad (curl con ?sinceId=<ultimo-id>).
   - Sé conciso. Di claramente cuándo empiezas y cuándo terminas una parte.
   - Espera confirmación del humano antes de acciones irreversibles.

@@ -70,4 +70,19 @@ describe('GET /r/:room/brief', () => {
     expect(body).toContain(room);
     expect(body).toContain('Presencia');
   });
+
+  it('instruye la convención de nombre <app>-<os> y el sufijo de unicidad', () => {
+    return api(`/r/${uniqueRoom('brief')}/brief`)
+      .then((res) => res.text())
+      .then((body) => {
+        // Convención de identidad de SPEC 06.
+        expect(body).toContain('<app>-<os>');
+        // SO reconocidos que la web sabe pintar.
+        expect(body).toMatch(/linux/);
+        expect(body).toMatch(/mac/);
+        expect(body).toMatch(/windows/);
+        // Sufijo de unicidad cuando el nombre ya está en línea.
+        expect(body).toMatch(/_2/);
+      });
+  });
 });

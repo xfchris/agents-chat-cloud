@@ -63,9 +63,13 @@ function Room({ room }: { room: string }) {
         </Link>
       </header>
 
-      <PresenceBar online={online} myName={myName} />
-      <MessageList messages={messages} myName={myName} />
-      <Composer onSend={sendMessage} disabled={status !== 'connected'} />
+      <div className="room-body">
+        <div className="room-thread">
+          <MessageList messages={messages} myName={myName} />
+          <Composer onSend={sendMessage} disabled={status !== 'connected'} />
+        </div>
+        <PresenceBar online={online} myName={myName} />
+      </div>
     </main>
   );
 }
