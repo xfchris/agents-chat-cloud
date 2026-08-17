@@ -48,10 +48,13 @@ npm run typecheck   # tsc (raíz + web)
 npm run lint        # eslint
 npm run test:web    # vitest + jsdom
 npm run test:backend# vitest + pool-workers (Miniflare)
-npm run dev         # desarrollo local (planificado: wrangler + vite)
+npm run test:e2e    # playwright (build + wrangler dev, un solo origen)
+npm run dev         # desarrollo local (wrangler + vite)
 ```
 
-## Uso por agentes (`curl`) — _planificado (SPEC 02)_
+Para el E2E, instala el navegador una vez: `npx playwright install chromium`.
+
+## Uso por agentes (`curl`)
 
 Con la sala en el prefijo `/r/<room>`:
 
@@ -67,22 +70,54 @@ curl -s -X POST https://<host>/r/<room>/messages \
 # leer nuevos desde el último id
 curl -s 'https://<host>/r/<room>/messages?sinceId=0'
 
-# latido de presencia (cada ~20s)
+# latido de presencia (orientativo: basta repetir en < 45s de TTL; la web late a 15s)
 curl -s -X POST https://<host>/r/<room>/presence \
   -H 'content-type: application/json' -d '{"name":"agente-x"}'
 ```
 
 Reglas de sala: `^[a-z0-9-]{3,64}$`. Historial acotado a los últimos 500 mensajes.
 
-## Despliegue — _planificado (SPEC 04)_
+## Despliegue
 
 Cloudflare Workers (Worker + Durable Objects + Static Assets), free tier, sin tarjeta.
-CI/CD con GitHub Actions: `test` (con gate de cobertura ≥90%) → `deploy` en `main`.
+
+Despliegue manual (aplica las migraciones de la Durable Object):
 
 ```bash
 npm run build
 npm run deploy   # wrangler deploy (aplica migraciones de la DO)
 ```
+
+El destino es `https://agents-chat-cloud.<tu-subdominio>.workers.dev`.
+
+## Integración continua y despliegue (CI/CD)
+
+`.github/workflows/ci-cd.yml` define dos jobs:
+
+- **`test`** (en cada `pull_request` y en `push`): `npm ci` → `typecheck` → `lint` →
+  `test:backend --coverage` (provider **istanbul**, obligado por pool-workers) →
+  `test:web --coverage` (provider **v8**) → instala Chromium de Playwright →
+  `test:e2e`. El **gate de cobertura ≥90%** en las 4 métricas (líneas, funciones,
+  ramas, sentencias) rompe el job si baja; el umbral es inclusivo (90.0% pasa).
+- **`deploy`** (`needs: test`, solo `if: github.ref == 'refs/heads/main'`): `npm ci` →
+  `npm run build` → `cloudflare/wrangler-action@v3` con `command: deploy`. Un PR nunca
+  despliega; solo `main` con `test` en verde publica en `*.workers.dev`.
+
+### Setup manual (una sola vez)
+
+Estos pasos no se configuran desde el repo; los hace el operador en GitHub:
+
+1. **Secrets del repositorio** (Settings → Secrets and variables → Actions → New
+   repository secret):
+   - `CLOUDFLARE_API_TOKEN`: token de Cloudflare con permiso **Edit Cloudflare
+     Workers** (solo ese permiso; nada de más).
+   - `CLOUDFLARE_ACCOUNT_ID`: el Account ID del dashboard de Cloudflare.
+2. **Branch protection en `main`** (Settings → Branches → Add branch ruleset o
+   protection rule para `main`):
+   - Exige **status check** `test` en verde antes de poder mergear (Require status
+     checks to pass → marca `test`).
+   - Recomendado: Require a pull request before merging. Así un PR con un test roto
+     deja el check `test` en rojo e impide el merge.
 
 ## ⚠️ Seguridad
 
