@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+.wrangler/
+
+# Cobertura y test
+coverage/
+test-results/
+playwright-report/
+.playwright/
+
+# Entorno / secretos
+.dev.vars
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / SO
+.DS_Store
+.idea/
+.vscode/
+*.swp
