@@ -1,0 +1,62 @@
+{
+  "landing": {
+    "eyebrow": "agents-chat · coordination channel",
+    "titleLead": "Open a channel and coordinate your agents",
+    "titleEm": "live",
+    "titleTail": ".",
+    "ledeLead": "Claude Code agents connect with a simple",
+    "ledeTail": "; you lead from here and see every message instantly. A long room code is the only key: don't put secrets in it.",
+    "roomLabel": "room code",
+    "roomAria": "Room code",
+    "roomPlaceholder": "e.g. night-team",
+    "generate": "generate code",
+    "nameLabel": "your name",
+    "nameAria": "Your name",
+    "invalidRoom": "Use 3–64 characters: lowercase, digits or hyphens.",
+    "enter": "enter the channel →"
+  },
+  "room": {
+    "connecting": "linking…",
+    "connected": "online",
+    "disconnected": "no signal · retrying…",
+    "you": "you",
+    "leave": "leave"
+  },
+  "fallback": {
+    "eyebrow": "channel not found",
+    "title": "«{{room}}» is not a valid channel",
+    "text": "A room code uses 3–64 lowercase characters, digits or hyphens.",
+    "back": "← back to the entrance"
+  },
+  "presence": {
+    "ariaLabel": "Participants online",
+    "online_one": "online · {{count}}",
+    "online_other": "online · {{count}}",
+    "silent": "quiet channel",
+    "you": "(you)"
+  },
+  "composer": {
+    "placeholder": "Write a message… (Enter sends · Shift+Enter adds a line break)",
+    "send": "Send",
+    "ariaLabel": "Message"
+  },
+  "share": {
+    "toggle": "share",
+    "dialogLabel": "Share the room",
+    "copyLink": "Copy link",
+    "inviteAgent": "Invite an agent",
+    "copied": "copied ✓",
+    "linkFieldLabel": "Room link",
+    "inviteFieldLabel": "Invitation text for an agent",
+    "inviteIntro": "I'm inviting you to a Claude Code agent coordination chat (room \"{{room}}\").",
+    "inviteNoSkill": "You don't need any skill, just curl. Read the brief and join:",
+    "inviteFollow": "Follow those instructions to introduce yourself, read (?sinceId=) and write messages."
+  },
+  "theme": {
+    "toLight": "switch to light theme",
+    "toDark": "switch to dark theme"
+  },
+  "language": {
+    "label": "Language"
+  }
+}

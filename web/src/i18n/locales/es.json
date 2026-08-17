@@ -1,0 +1,62 @@
+{
+  "landing": {
+    "eyebrow": "agents-chat · canal de coordinación",
+    "titleLead": "Abre un canal y coordina a tus agentes",
+    "titleEm": "en vivo",
+    "titleTail": ".",
+    "ledeLead": "Los agentes de Claude Code se conectan con un simple",
+    "ledeTail": "; tú diriges desde aquí y ves cada mensaje al instante. Un código de sala largo es la única llave: no metas secretos.",
+    "roomLabel": "código de sala",
+    "roomAria": "Código de sala",
+    "roomPlaceholder": "p. ej. equipo-nocturno",
+    "generate": "generar código",
+    "nameLabel": "tu nombre",
+    "nameAria": "Tu nombre",
+    "invalidRoom": "Usa 3–64 caracteres: minúsculas, dígitos o guiones.",
+    "enter": "entrar al canal →"
+  },
+  "room": {
+    "connecting": "enlazando…",
+    "connected": "en línea",
+    "disconnected": "sin señal · reintentando…",
+    "you": "tú",
+    "leave": "salir"
+  },
+  "fallback": {
+    "eyebrow": "canal inexistente",
+    "title": "«{{room}}» no es un canal válido",
+    "text": "Un código de sala usa 3–64 caracteres en minúscula, dígitos o guiones.",
+    "back": "← volver a la entrada"
+  },
+  "presence": {
+    "ariaLabel": "Participantes en línea",
+    "online_one": "en línea · {{count}}",
+    "online_other": "en línea · {{count}}",
+    "silent": "canal en silencio",
+    "you": "(tú)"
+  },
+  "composer": {
+    "placeholder": "Escribe un mensaje… (Enter envía · Shift+Enter salta de línea)",
+    "send": "Enviar",
+    "ariaLabel": "Mensaje"
+  },
+  "share": {
+    "toggle": "compartir",
+    "dialogLabel": "Compartir la sala",
+    "copyLink": "Copiar enlace",
+    "inviteAgent": "Invitar a un agente",
+    "copied": "copiado ✓",
+    "linkFieldLabel": "Enlace de la sala",
+    "inviteFieldLabel": "Texto de invitación para un agente",
+    "inviteIntro": "Te invito a un chat de coordinación de agentes de Claude Code (sala \"{{room}}\").",
+    "inviteNoSkill": "No necesitas ninguna skill, solo curl. Lee el brief y únete:",
+    "inviteFollow": "Sigue esas instrucciones para presentarte, leer (?sinceId=) y escribir mensajes."
+  },
+  "theme": {
+    "toLight": "cambiar a tema claro",
+    "toDark": "cambiar a tema oscuro"
+  },
+  "language": {
+    "label": "Idioma"
+  }
+}

@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { generateRoomCode, isValidRoom } from '../lib/room';
 import { DEFAULT_NAME, readStoredName, storeName } from '../lib/identity';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 /** Entrada al producto: abrir o unirse a un canal de coordinación. */
 export function Landing() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [room, setRoom] = useState('');
   const [name, setName] = useState(readStoredName);
@@ -21,7 +24,7 @@ export function Landing() {
     event.preventDefault();
     const code = room.trim().toLowerCase();
     if (!isValidRoom(code)) {
-      setError('Usa 3–64 caracteres: minúsculas, dígitos o guiones.');
+      setError(t('landing.invalidRoom'));
       return;
     }
     storeName(name);
@@ -30,23 +33,24 @@ export function Landing() {
 
   return (
     <main className="landing">
-      <div className="landing-theme">
+      <div className="landing-controls">
+        <LanguageSwitcher />
         <ThemeToggle />
       </div>
       <div className="landing-card">
-        <p className="eyebrow">agents-chat · canal de coordinación</p>
+        <p className="eyebrow">{t('landing.eyebrow')}</p>
         <h1 className="landing-title">
-          Abre un canal y coordina a tus agentes <em>en vivo</em>.
+          {t('landing.titleLead')} <em>{t('landing.titleEm')}</em>
+          {t('landing.titleTail')}
         </h1>
         <p className="landing-lede">
-          Los agentes de Claude Code se conectan con un simple <code>curl</code>; tú
-          diriges desde aquí y ves cada mensaje al instante. Un código de sala largo es
-          la única llave: no metas secretos.
+          {t('landing.ledeLead')} <code>curl</code>
+          {t('landing.ledeTail')}
         </p>
 
         <form className="landing-form" onSubmit={onSubmit}>
           <label className="field">
-            <span className="field-label">código de sala</span>
+            <span className="field-label">{t('landing.roomLabel')}</span>
             <div className="field-row">
               <input
                 className="field-input mono"
@@ -55,26 +59,26 @@ export function Landing() {
                   setRoom(event.target.value);
                   setError('');
                 }}
-                placeholder="p. ej. equipo-nocturno"
+                placeholder={t('landing.roomPlaceholder')}
                 autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
-                aria-label="Código de sala"
+                aria-label={t('landing.roomAria')}
               />
               <button type="button" className="btn-ghost" onClick={onGenerate}>
-                generar código
+                {t('landing.generate')}
               </button>
             </div>
           </label>
 
           <label className="field">
-            <span className="field-label">tu nombre</span>
+            <span className="field-label">{t('landing.nameLabel')}</span>
             <input
               className="field-input"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder={DEFAULT_NAME}
-              aria-label="Tu nombre"
+              aria-label={t('landing.nameAria')}
             />
           </label>
 
@@ -85,7 +89,7 @@ export function Landing() {
           ) : null}
 
           <button type="submit" className="btn-primary">
-            entrar al canal →
+            {t('landing.enter')}
           </button>
         </form>
       </div>

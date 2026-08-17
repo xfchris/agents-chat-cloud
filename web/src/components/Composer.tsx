@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { KeyboardEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ComposerProps {
   onSend: (text: string) => void;
@@ -8,6 +9,7 @@ interface ComposerProps {
 
 /** Entrada de mensajes: Enter envía, Shift+Enter inserta salto de línea. */
 export function Composer({ onSend, disabled }: ComposerProps) {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
 
   const submit = () => {
@@ -31,9 +33,9 @@ export function Composer({ onSend, disabled }: ComposerProps) {
         value={text}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={onKeyDown}
-        placeholder="Escribe un mensaje… (Enter envía · Shift+Enter salta de línea)"
+        placeholder={t('composer.placeholder')}
         rows={1}
-        aria-label="Mensaje"
+        aria-label={t('composer.ariaLabel')}
       />
       <button
         type="button"
@@ -41,7 +43,7 @@ export function Composer({ onSend, disabled }: ComposerProps) {
         onClick={submit}
         disabled={disabled || text.trim().length === 0}
       >
-        Enviar
+        {t('composer.send')}
       </button>
     </footer>
   );

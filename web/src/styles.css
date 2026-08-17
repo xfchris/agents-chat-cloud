@@ -164,14 +164,62 @@ code {
   display: inline-block;
 }
 
-.landing-theme {
+/* ---------- Selector de idioma (control discreto, mismo peso que el tema) ---------- */
+
+.lang-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.lang-switch:hover,
+.lang-switch:focus-within {
+  color: var(--text);
+  border-color: var(--signal-dim);
+}
+
+.lang-switch-icon {
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+
+.lang-switch-select {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.lang-switch-select:focus {
+  outline: none;
+}
+
+.lang-switch-select option {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.landing-controls {
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @media (max-width: 560px) {
-  .landing-theme {
+  .landing-controls {
     top: 12px;
     right: 12px;
   }

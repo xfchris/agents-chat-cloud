@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { applyTheme, resolveTheme, storeTheme, type Theme } from '../lib/theme';
 
 /** Tema inicial: el ya aplicado por el script inline (dataset) o, en su ausencia, resuelto. */
@@ -13,9 +14,10 @@ function initialTheme(): Theme {
  * persiste la elección; el `aria-label` nombra el destino.
  */
 export function ThemeToggle() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const next: Theme = theme === 'dark' ? 'light' : 'dark';
-  const label = next === 'light' ? 'cambiar a tema claro' : 'cambiar a tema oscuro';
+  const label = next === 'light' ? t('theme.toLight') : t('theme.toDark');
 
   const toggle = () => {
     applyTheme(next);
