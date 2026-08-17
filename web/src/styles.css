@@ -1,0 +1,570 @@
+/*
+ * agents-chat-cloud — dirección visual "signal room".
+ * Firma: metadatos como telemetría en monoespaciada + pulso "en vivo" en los
+ * puntos de conexión/presencia. Acento teal-señal, ámbar reservado a `system`.
+ * Fuentes del sistema a propósito: cero dependencias externas (offline-friendly).
+ */
+
+:root {
+  --ink: #0a0d13;
+  --surface: #10151f;
+  --surface-2: #161d2a;
+  --raised: #1d2636;
+  --line: #262f40;
+  --line-soft: #1c2431;
+
+  --text: #e4e9f1;
+  --muted: #8794a8;
+  --faint: #5b6678;
+
+  --signal: #2fd4bd;
+  --signal-strong: #4ff0d8;
+  --signal-dim: #1c7d72;
+  --signal-glow: rgba(47, 212, 189, 0.16);
+  --amber: #e6ac54;
+  --danger: #e2565b;
+  --live: #3ddc84;
+
+  --me: #13241f;
+  --me-line: #2e6b5e;
+
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font: 15px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: #05070b;
+  border: 1px solid var(--line-soft);
+  padding: 1px 6px;
+  border-radius: 5px;
+  color: var(--signal-strong);
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin: 0;
+}
+
+.ghost-link {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.ghost-link:hover {
+  color: var(--text);
+  border-color: var(--signal-dim);
+}
+
+/* ---------- Pulso "en vivo" (firma) ---------- */
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--signal-glow);
+  }
+  70% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* ---------- Landing ---------- */
+
+.landing {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(47, 212, 189, 0.08), transparent 60%),
+    var(--ink);
+}
+
+.landing-card {
+  width: min(560px, 100%);
+  background: linear-gradient(180deg, var(--surface), var(--ink));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 36px 34px 34px;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+.landing-title {
+  font-size: clamp(26px, 4.5vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 650;
+  margin: 14px 0 12px;
+}
+
+.landing-title em {
+  font-style: normal;
+  color: var(--signal);
+}
+
+.landing-lede {
+  color: var(--muted);
+  font-size: 14.5px;
+  margin: 0 0 26px;
+}
+
+.landing-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+
+.field-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field-input:focus-visible {
+  outline: none;
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin: -4px 0 0;
+}
+
+.btn-ghost {
+  white-space: nowrap;
+  background: transparent;
+  color: var(--signal);
+  border: 1px solid var(--signal-dim);
+  border-radius: var(--radius-sm);
+  padding: 0 15px;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-ghost:hover {
+  background: var(--signal-glow);
+  color: var(--signal-strong);
+}
+
+.btn-primary {
+  background: var(--signal);
+  color: #04140f;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 13px 18px;
+  font: inherit;
+  font-weight: 650;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.05s;
+}
+
+.btn-primary:hover {
+  background: var(--signal-strong);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* ---------- Sala: layout ---------- */
+
+.room {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 11px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.signal {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--faint);
+}
+
+.signal-connected {
+  background: var(--live);
+  animation: pulse-ring 2s infinite;
+}
+
+.signal-connecting {
+  background: var(--amber);
+}
+
+.signal-disconnected {
+  background: var(--danger);
+}
+
+.channel-name {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channel-hash {
+  color: var(--signal);
+}
+
+.conn {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.conn-connected {
+  color: var(--live);
+}
+
+.conn-disconnected {
+  color: var(--danger);
+}
+
+.identity {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.identity-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.identity-input {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 6px 11px;
+  font: inherit;
+  font-size: 13px;
+  width: 170px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.identity-input:focus-visible {
+  outline: none;
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+/* ---------- Presencia ---------- */
+
+.presence {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 9px 18px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.presence-count {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.presence-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 13px;
+}
+
+.chip-me {
+  border-color: var(--signal-dim);
+  color: var(--signal-strong);
+}
+
+.chip-tag {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.16);
+}
+
+/* ---------- Registro de mensajes ---------- */
+
+.log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-color: var(--line) transparent;
+}
+
+.system-line {
+  align-self: center;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--amber);
+  opacity: 0.85;
+  padding: 2px 0;
+}
+
+.message {
+  max-width: 76%;
+  align-self: flex-start;
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 8px 13px 9px;
+}
+
+.message-me {
+  align-self: flex-end;
+  background: var(--me);
+  border-color: var(--me-line);
+}
+
+.message-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.message-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--signal);
+}
+
+.message-me .message-name {
+  color: var(--signal-strong);
+}
+
+.message-time {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--faint);
+}
+
+.message-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Composer ---------- */
+
+.composer {
+  display: flex;
+  gap: 11px;
+  align-items: flex-end;
+  padding: 13px 18px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.composer-input {
+  flex: 1;
+  resize: none;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  font: inherit;
+  min-height: 46px;
+  max-height: 168px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.composer-input:focus-visible {
+  outline: none;
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.composer-send {
+  background: var(--signal);
+  color: #04140f;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0 20px;
+  height: 46px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.composer-send:hover:not(:disabled) {
+  background: var(--signal-strong);
+}
+
+.composer-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Fallback de sala inválida ---------- */
+
+.fallback {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 32px 20px;
+}
+
+.fallback h1 {
+  font-size: clamp(22px, 4vw, 28px);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fallback-text {
+  color: var(--muted);
+  margin: 0;
+  max-width: 42ch;
+}
+
+/* ---------- Accesibilidad ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-connected {
+    animation: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .identity {
+    margin-left: 0;
+  }
+  .identity-input {
+    width: 120px;
+  }
+  .message {
+    max-width: 88%;
+  }
+}

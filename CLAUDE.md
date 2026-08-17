@@ -62,6 +62,9 @@ wrangler.toml   # binding DO ROOMS + [[migrations]] + [assets] -> dist/client (S
 - **Ramas por spec**: `feature/NN-<descripción>` (skill `/rama-spec`).
 - **`shared/` es la única fuente de tipos**: backend y frontend importan de ahí; no
   redefinas `Message`/`PresenceEntry`/protocolo WS en otro sitio.
+- **Frontend/UI: carga y aplica el skill `frontend-design`** antes de crear o
+  rediseñar cualquier interfaz (`web/`): dirección estética, tipografía y decisiones
+  visuales intencionadas. Es obligatorio para todo trabajo de UI de este proyecto.
 - **Cobertura ≥90%** (gate en CI, medido por proyecto). No bajarla.
 - **Este es un Worker + Durable Object, sin DB**: no montes capas de
   services/repositories. Sigue la estructura de las specs (`worker.ts`, `chatroom.ts`).
