@@ -104,6 +104,13 @@ No expone API de producto. Define el contrato de **CI**:
 
 ## Casos borde
 
+- **Cobertura backend con pool-workers**: el provider `@vitest/coverage-v8` NO corre
+  bajo `@cloudflare/vitest-pool-workers` (importa `node:inspector/promises`, ausente en
+  workerd → la suite ni arranca con `--coverage`). Verificado al implementar SPEC 02.
+  El gate del job `test` debe usar el provider **`istanbul`** para la cobertura del
+  proyecto backend (instrumenta en transform, compatible con el pool). El proyecto web
+  (jsdom) sí funciona con v8. Ajustar `vitest.*.config.ts`/`vitest.coverage.ts` en
+  consecuencia al montar el gate.
 - E2E flaky por timing de WS → usar `expect.poll`/`waitFor` de Playwright en vez de
   sleeps fijos.
 - `wrangler dev` que no arranca en CI → el `webServer` de Playwright falla claro; el

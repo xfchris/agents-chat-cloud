@@ -61,6 +61,14 @@ Convenciones:
 Todos los endpoints cuelgan del prefijo `/r/:room`. `room` debe cumplir `ROOM_RE`
 (`^[a-z0-9-]{3,64}$`); si no, el Worker responde **404** sin tocar ninguna DO.
 
+**Routing en el Worker (API vs SPA).** Bajo `/r/`, solo los subpaths de API/WS
+—`/ws`, `/brief`, `/messages`, `/presence`— se delegan a la Durable Object. Un
+`/r/<room>` **pelado** (navegación del navegador a una sala) o cualquier otro subpath
+bajo `/r/<room>/...` que no sea de API/WS lo sirve **Static Assets** (fallback SPA →
+`index.html`), para que los deep-links y el refresh en una sala funcionen. La
+validación de `room` con `ROOM_RE` aplica igual: una `room` inválida da **404** sea
+cual sea el subpath (no se sirve el SPA para salas con nombre inválido).
+
 - `GET /r/:room/brief` → `200 text/plain; charset=utf-8`. Texto del brief
   parametrizado con la URL real y `<room>` (incluye la sección de presencia).
 - `GET /r/:room/messages?sinceId=<n>` → `200 application/json`. Devuelve los
@@ -87,7 +95,8 @@ Todos los endpoints cuelgan del prefijo `/r/:room`. `room` debe cumplir `ROOM_RE
   `{type:'presence', online}`.
 
 **Límites (paridad con el local):** `name` recortado a 80 chars, `text` a 20000.
-Body de `POST messages` cortado si supera ~200 KB.
+Body de `POST messages` que supera ~200 KB → **413** (rechazado, no truncado: truncar
+el JSON lo invalidaría). Como `TEXT_MAX=20000`, el cap solo aplica a abuso.
 
 ## Plan de implementación
 
@@ -112,10 +121,15 @@ Body de `POST messages` cortado si supera ~200 KB.
    crea/usa la DO), emitir `appendMessage({name:'sistema', text:'Sala <room> creada',
    kind:'system'})`. El `<room>` llega por header/URL desde el Worker. Prueba: test
    de que una sala nueva arranca con 1 mensaje `system`.
-7. `src/worker.ts`: `export default { fetch }` que hace match de
-   `^/r/([a-z0-9-]{3,64})(/.*)?$`, valida `room`, reescribe la URL sin el prefijo,
-   pasa el `room` a la DO (header `x-room`), y hace `stub.fetch`. Todo lo demás →
-   `env.ASSETS.fetch(request)`. Prueba: test de routing y de aislamiento entre salas.
+7. `src/worker.ts`: `export default { fetch }`. Para peticiones bajo `/r/`, extrae
+   `room` y valídalo con `ROOM_RE` (inválido → **404** sin tocar ninguna DO). Si
+   `room` es válido y el subpath es de API/WS (`/ws`, `/brief`, `/messages`,
+   `/presence`): reescribe la URL sin el prefijo `/r/<room>`, pasa el `room` a la DO
+   por header `x-room`, y hace `stub.fetch` sobre `env.ROOMS.idFromName(room)`. Si
+   `room` es válido pero el subpath NO es de API/WS (incluido `/r/<room>` pelado) →
+   `env.ASSETS.fetch(request)` (SPA). Todo lo que no cuelga de `/r/` → también
+   `env.ASSETS.fetch(request)`. Prueba: test de routing, de aislamiento entre salas,
+   de que `/r/<room>` sirve el SPA y de que `room` inválida da 404.
 
 ## Criterios de aceptación
 
@@ -136,7 +150,10 @@ Body de `POST messages` cortado si supera ~200 KB.
       los más antiguos) y `GET messages` no devuelve más de 500.
 - [ ] Tras reiniciar la DO (simular restart en Miniflare), el historial persiste y se
       re-emite al conectar.
-- [ ] `room` que no cumple `ROOM_RE` (p. ej. `/r/AB` o `/r/x`) → `404`.
+- [ ] `room` que no cumple `ROOM_RE` (p. ej. `/r/AB` o `/r/x`) → `404`, en cualquier
+      subpath (API o navegación).
+- [ ] `GET /r/<room-válido>` pelado (navegación) → lo sirve Static Assets (SPA), no la
+      DO; no devuelve `404`.
 - [ ] `OPTIONS /r/a/messages` → `204` con cabeceras CORS `*`.
 - [ ] Una sala nueva arranca con un único mensaje `kind:'system'` = `Sala <room>
       creada`, que no cuenta para presencia.
