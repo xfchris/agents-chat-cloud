@@ -16,6 +16,7 @@ export default defineConfig({
     name: 'web',
     environment: 'jsdom',
     globals: true,
+    setupFiles: ['test/web/setup.ts'],
     include: ['test/web/**/*.test.{ts,tsx}'],
     coverage: coverageFor(['web/src/**/*.{ts,tsx}']),
   },
