@@ -29,6 +29,9 @@ criterios de aceptación distintos, que se lanzan y verifican por separado.
 - `03-frontend.md` — id `frontend`
 - `04-cicd.md` — id `cicd`
 - `05-nick-fijo-y-compartir-sala.md` — extiende `frontend` (nick fijo + compartir/invitar)
+- `06-roster-derecha-e-identidad-agentes.md` — extiende `frontend` (presencia a la derecha + iconos app/SO de agentes; retoca el texto del `brief`)
+- `07-tema-claro-oscuro.md` — extiende `frontend` (tema claro/oscuro conmutable)
+- `08-i18n-multiidioma.md` — extiende `frontend` (i18n ES/EN/PT/ZH con react-i18next)
 
 ## Reglas del mapa
 
