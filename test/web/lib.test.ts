@@ -4,6 +4,8 @@ import { generateRoomCode, isValidRoom } from '../../web/src/lib/room';
 import {
   DEFAULT_NAME,
   effectiveName,
+  kindIcon,
+  parseIdentity,
   readStoredName,
   storeName,
 } from '../../web/src/lib/identity';
@@ -72,6 +74,80 @@ describe('lib/identity · persistencia en localStorage', () => {
   it('storeName guarda `humano` si el nombre queda vacío', () => {
     storeName('   ');
     expect(readStoredName()).toBe(DEFAULT_NAME);
+  });
+});
+
+describe('lib/identity · parseIdentity (agentes)', () => {
+  it('claudecode-linux → agente 🤖 🐧 con label sin sufijo', () => {
+    const id = parseIdentity('claudecode-linux');
+    expect(id).toEqual({
+      kind: 'agent',
+      label: 'claudecode',
+      robot: true,
+      osIcon: '🐧',
+      os: 'linux',
+      app: 'claudecode',
+    });
+    expect(id.suffix).toBeUndefined();
+    expect(kindIcon(id)).toBe('🤖');
+  });
+
+  it('opencode-mac → 🍎 con app opencode', () => {
+    const id = parseIdentity('opencode-mac');
+    expect(id.kind).toBe('agent');
+    expect(id.os).toBe('mac');
+    expect(id.osIcon).toBe('🍎');
+    expect(id.app).toBe('opencode');
+    expect(id.label).toBe('opencode');
+  });
+
+  it('codex-windows → 🪟 con app codex', () => {
+    const id = parseIdentity('codex-windows');
+    expect(id.kind).toBe('agent');
+    expect(id.os).toBe('windows');
+    expect(id.osIcon).toBe('🪟');
+    expect(id.app).toBe('codex');
+    expect(id.label).toBe('codex');
+  });
+
+  it.each([
+    ['x-macos', 'mac', '🍎'],
+    ['x-darwin', 'mac', '🍎'],
+    ['x-win', 'windows', '🪟'],
+    ['x-linux', 'linux', '🐧'],
+  ])('alias %s normaliza a os %s con icono %s', (name, os, icon) => {
+    const id = parseIdentity(name);
+    expect(id.kind).toBe('agent');
+    expect(id.os).toBe(os);
+    expect(id.osIcon).toBe(icon);
+  });
+
+  it('claudecode-linux_2 → label con sufijo y campo suffix', () => {
+    const id = parseIdentity('claudecode-linux_2');
+    expect(id.label).toBe('claudecode_2');
+    expect(id.suffix).toBe('2');
+    expect(id.osIcon).toBe('🐧');
+    expect(id.app).toBe('claudecode');
+    expect(kindIcon(id)).toBe('🤖');
+  });
+});
+
+describe('lib/identity · parseIdentity (humanos y fallbacks)', () => {
+  it.each([
+    ['humano', 'humano por defecto'],
+    ['ana', 'nombre simple sin convención'],
+    ['claudecode-freebsd', 'SO no reconocido'],
+    ['ClaudeCode-Linux', 'mayúsculas no casan la convención'],
+  ])('%s → humano 👤 con label = name (%s)', (name) => {
+    const id = parseIdentity(name);
+    expect(id.kind).toBe('human');
+    expect(id.robot).toBe(false);
+    expect(id.label).toBe(name);
+    expect(id.osIcon).toBeUndefined();
+    expect(id.os).toBeUndefined();
+    expect(id.app).toBeUndefined();
+    expect(id.suffix).toBeUndefined();
+    expect(kindIcon(id)).toBe('👤');
   });
 });
 
