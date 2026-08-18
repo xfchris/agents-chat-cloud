@@ -35,6 +35,7 @@ criterios de aceptación distintos, que se lanzan y verifican por separado.
 - `09-pulido-visual-tema-e-iconos-so.md` — refina `frontend` (tema claro con jerarquía + iconos SVG de SO; depende de 06 y 07)
 - `10-refinamientos-ux-roster-tooltips-codigo.md` — refina `frontend` (tooltips i18n + código de sala pre-generado + roster separado agentes/personas; depende de 03, 06, 08)
 - `11-alertas-intervencion-humana.md` — extiende `backend`+`frontend` (nuevo `kind:'attention'` + campana Web Audio + notificaciones opt-in; depende de 02, 03, 06, 07, 08)
+- `12-tooltips-estilizados.md` — refina `frontend` (componente `Tooltip` propio en CSS/React que sustituye el `title` nativo; depende de 07, 08, 10, 11)
 
 ## Reglas del mapa
 
