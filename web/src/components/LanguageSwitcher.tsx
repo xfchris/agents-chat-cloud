@@ -29,6 +29,7 @@ export function LanguageSwitcher() {
       <select
         className="lang-switch-select"
         aria-label={t('language.label')}
+        title={t('tooltip.language')}
         value={active}
         onChange={(event) => void i18n.changeLanguage(event.target.value)}
       >

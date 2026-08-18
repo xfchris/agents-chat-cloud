@@ -33,7 +33,31 @@
     "online_one": "on-line · {{count}}",
     "online_other": "on-line · {{count}}",
     "silent": "canal em silêncio",
-    "you": "(você)"
+    "you": "(você)",
+    "agents": "Agentes",
+    "humans": "Pessoas"
+  },
+  "attention": {
+    "label": "Intervenção",
+    "toggleOn": "Ativar avisos",
+    "toggleOff": "Desativar avisos",
+    "tooltip": "Avisar quando um agente pedir intervenção",
+    "notifyTitle": "Intervenção necessária",
+    "notifyBody": "{{name}} pede ajuda na sala"
+  },
+  "os": {
+    "linux": "Linux",
+    "mac": "macOS",
+    "windows": "Windows"
+  },
+  "identity": {
+    "agent": "Agente",
+    "human": "Pessoa"
+  },
+  "tooltip": {
+    "theme": "Mudar tema",
+    "language": "Mudar idioma",
+    "share": "Compartilhar sala"
   },
   "composer": {
     "placeholder": "Escreva uma mensagem… (Enter envia · Shift+Enter quebra a linha)",

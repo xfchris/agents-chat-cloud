@@ -85,4 +85,14 @@ describe('GET /r/:room/brief', () => {
         expect(body).toMatch(/_2/);
       });
   });
+
+  it('documenta cómo pedir intervención humana con kind:"attention" (SPEC 11)', () => {
+    return api(`/r/${uniqueRoom('brief')}/brief`)
+      .then((res) => res.text())
+      .then((body) => {
+        expect(body).toContain('pedir intervención humana');
+        // El ejemplo lleva el campo kind:"attention" en el curl.
+        expect(body).toContain('"kind":"attention"');
+      });
+  });
 });

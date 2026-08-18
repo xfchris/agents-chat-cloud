@@ -61,6 +61,15 @@ describe('ShareInvite — abrir/cerrar popover', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
+  it('el botón compartir expone un title traducido (tooltip.share)', () => {
+    render(<ShareInvite room="sala-1" />);
+
+    expect(screen.getByRole('button', { name: 'compartir' })).toHaveAttribute(
+      'title',
+      'Compartir sala',
+    );
+  });
+
   it('cierra con Escape', async () => {
     const user = userEvent.setup();
     render(<ShareInvite room="sala-1" />);

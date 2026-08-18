@@ -80,6 +80,7 @@ export function ShareInvite({ room }: { room: string }) {
         className="ghost-link share-toggle"
         aria-expanded={open}
         aria-haspopup="dialog"
+        title={t('tooltip.share')}
         onClick={() => setOpen((prev) => !prev)}
       >
         {t('share.toggle')}

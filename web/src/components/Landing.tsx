@@ -11,7 +11,15 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 export function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [room, setRoom] = useState('');
+  // Inicializador perezoso: pre-genera un código válido una sola vez (no en cada
+  // render). Si `crypto` no estuviera disponible, cae a vacío sin romper el montaje.
+  const [room, setRoom] = useState(() => {
+    try {
+      return generateRoomCode();
+    } catch {
+      return '';
+    }
+  });
   const [name, setName] = useState(readStoredName);
   const [error, setError] = useState('');
 

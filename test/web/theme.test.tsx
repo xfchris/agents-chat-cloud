@@ -57,7 +57,8 @@ describe('ThemeToggle', () => {
 
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-label', 'cambiar a tema claro');
-    expect(button).toHaveAttribute('title', 'cambiar a tema claro');
+    // El tooltip (title) usa la clave genérica `tooltip.theme`, no el destino.
+    expect(button).toHaveAttribute('title', 'Cambiar tema');
     expect(button.textContent).toContain('☀️');
   });
 

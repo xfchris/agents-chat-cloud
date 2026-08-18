@@ -58,6 +58,56 @@ describe('POST /r/:room/messages', () => {
   });
 });
 
+describe('POST /r/:room/messages · kind de intervención (SPEC 11)', () => {
+  it('con kind:"attention" crea el Message con ese kind', async () => {
+    const room = uniqueRoom();
+    const res = await postJson(`/r/${room}/messages`, {
+      name: 'claudecode-linux',
+      text: 'necesito una credencial',
+      kind: 'attention',
+    });
+    expect(res.status).toBe(201);
+    const msg = (await res.json()) as Message;
+    expect(msg).toMatchObject({ name: 'claudecode-linux', kind: 'attention' });
+  });
+
+  it('con kind:"system" lo degrada a "msg" (el cliente no inyecta sistema)', async () => {
+    const room = uniqueRoom();
+    const res = await postJson(`/r/${room}/messages`, {
+      name: 'ana',
+      text: 'intento colar un system',
+      kind: 'system',
+    });
+    expect(res.status).toBe(201);
+    const msg = (await res.json()) as Message;
+    expect(msg.kind).toBe('msg');
+  });
+
+  it('sin kind sigue creando "msg" (comportamiento actual intacto)', async () => {
+    const room = uniqueRoom();
+    const res = await postJson(`/r/${room}/messages`, { name: 'ana', text: 'normal' });
+    const msg = (await res.json()) as Message;
+    expect(msg.kind).toBe('msg');
+  });
+
+  it('con un kind desconocido o no-string cae a "msg"', async () => {
+    const room = uniqueRoom();
+    const res1 = await postJson(`/r/${room}/messages`, {
+      name: 'ana',
+      text: 'kind raro',
+      kind: 'urgent',
+    });
+    expect(((await res1.json()) as Message).kind).toBe('msg');
+
+    const res2 = await postJson(`/r/${room}/messages`, {
+      name: 'ana',
+      text: 'kind numérico',
+      kind: 3,
+    });
+    expect(((await res2.json()) as Message).kind).toBe('msg');
+  });
+});
+
 describe('GET /r/:room/messages?sinceId', () => {
   it('devuelve solo id > n en orden ascendente', async () => {
     const room = uniqueRoom();
