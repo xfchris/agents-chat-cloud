@@ -36,7 +36,8 @@ difusión. El agente solo necesita `curl`; ninguna skill.
     - **Campana:** un timbre corto generado con la **Web Audio API** (sin fichero), una
       vez por mensaje.
     - **Notificación del navegador:** solo si el usuario activó el toggle, el permiso está
-      concedido y la pestaña no está enfocada (`document.hidden`).
+      concedido y no está viendo la sala — pestaña oculta (`document.hidden`) **o** la
+      ventana sin foco (`!document.hasFocus()`, p. ej. trabajando en su IDE/terminal).
   - `NotificationToggle`: control en la cabecera de la sala para activar/desactivar las
     notificaciones; al activarlo pide permiso (`Notification.requestPermission()`) y
     persiste la preferencia en `localStorage`.
@@ -155,8 +156,9 @@ Claves i18n nuevas (mismas en los cuatro idiomas):
       una vez.
 - [ ] La campana **no** suena al cargar el historial (mensajes `attention` previos) ni por
       un `attention` cuyo `name` es el mío.
-- [ ] Con el toggle activado, permiso concedido y la pestaña en 2.º plano
-      (`document.hidden`), llega una notificación del navegador con nombre del emisor.
+- [ ] Con el toggle activado, permiso concedido y el usuario sin ver la sala (pestaña
+      oculta **o** ventana sin foco), llega una notificación del navegador con nombre del
+      emisor.
 - [ ] Con el toggle desactivado no llega ninguna notificación (pero la campana sí suena).
 - [ ] La preferencia del toggle persiste en `localStorage` y se conserva al recargar.
 - [ ] Todos los textos nuevos salen de i18n en los cuatro idiomas.
@@ -173,9 +175,12 @@ Claves i18n nuevas (mismas en los cuatro idiomas):
   mensajes normales.
 - **Sí:** la campana suena **una vez** por mensaje, sin estado de ack. Simple y no
   intrusivo; un bucle hasta reconocer exigiría estado y un botón de ack (fuera de alcance).
-- **Sí:** notificación del navegador **opt-in** por toggle y solo con la pestaña oculta.
-  Evita el auto-prompt de permiso (mala UX, a menudo bloqueado) y el doble aviso cuando el
-  usuario ya está mirando.
+- **Sí:** notificación del navegador **opt-in** por toggle y solo cuando el usuario no está
+  viendo la sala. Evita el auto-prompt de permiso (mala UX, a menudo bloqueado) y el doble
+  aviso cuando ya está mirando.
+- **Sí:** «no está viendo» = `document.hidden` **o** `!document.hasFocus()`. Solo `hidden`
+  se queda corto: cambiar de aplicación (a un IDE/terminal) no oculta la pestaña, y ese es
+  el caso típico del coordinador; `hasFocus()` lo capta.
 - **Sí:** sonido con **Web Audio API** generado. Sin asset binario, offline, cero ficheros
   que versionar.
 - **No:** fichero de audio empaquetado. Más agradable, pero añade binario al repo/bundle.
@@ -194,8 +199,9 @@ Claves i18n nuevas (mismas en los cuatro idiomas):
   sin permiso; no se muestra notificación (la campana sigue). No re-preguntar en bucle.
 - **`Notification` o `localStorage` ausentes:** el toggle se degrada (no persiste / no
   notifica) sin romper la sala.
-- **Pestaña enfocada:** con la pestaña visible no se notifica aunque el toggle esté activo;
-  la campana y el resalte bastan.
+- **Sala a la vista y enfocada:** con la pestaña visible Y la ventana con foco no se
+  notifica aunque el toggle esté activo; la campana y el resalte bastan. Si el foco se va a
+  otra app (pestaña aún visible) sí se notifica: el coordinador no está mirando.
 - **`attention` en el historial al entrar:** se renderiza resaltado pero **no** dispara
   campana ni notificación (no es un evento en vivo).
 - **Ráfaga de alertas:** cada mensaje `attention` suena una vez; no se agrupan (aceptable

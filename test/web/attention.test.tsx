@@ -331,6 +331,10 @@ describe('lib/attention · fireAttentionAlert', () => {
     Object.defineProperty(document, 'hidden', { configurable: true, value: hidden });
   }
 
+  function stubFocus(hasFocus: boolean) {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(hasFocus);
+  }
+
   function stubAudio() {
     const start = vi.fn();
     vi.stubGlobal(
@@ -372,18 +376,36 @@ describe('lib/attention · fireAttentionAlert', () => {
     expect(ctor).toHaveBeenCalled();
   });
 
-  it('con la pestaña visible suena la campana pero NO notifica', async () => {
+  it('con la sala a la vista y enfocada suena la campana pero NO notifica', async () => {
     const { start } = stubAudio();
     const ctor = vi.fn();
     vi.stubGlobal('Notification', Object.assign(ctor, { permission: 'granted' }));
     localStorage.setItem('notifyOnAttention', '1');
     stubHidden(false);
+    stubFocus(true);
     const { fireAttentionAlert } = await freshAttention();
 
     fireAttentionAlert(makeMessage({ name: 'codex-linux' }), t);
 
     expect(start).toHaveBeenCalled();
     expect(ctor).not.toHaveBeenCalled();
+  });
+
+  it('notifica si el foco está en otra app aunque la pestaña sea visible', async () => {
+    const { start } = stubAudio();
+    const ctor = vi.fn();
+    vi.stubGlobal('Notification', Object.assign(ctor, { permission: 'granted' }));
+    localStorage.setItem('notifyOnAttention', '1');
+    // Caso típico del coordinador: pestaña visible (no oculta) pero trabajando en
+    // otra ventana/app, así que el documento no tiene el foco.
+    stubHidden(false);
+    stubFocus(false);
+    const { fireAttentionAlert } = await freshAttention();
+
+    fireAttentionAlert(makeMessage({ name: 'codex-linux' }), t);
+
+    expect(start).toHaveBeenCalled();
+    expect(ctor).toHaveBeenCalled();
   });
 
   it('con el toggle desactivado no notifica (aunque haya permiso y pestaña oculta)', async () => {
