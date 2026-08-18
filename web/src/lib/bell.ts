@@ -27,6 +27,29 @@ function ensureContext(): AudioContext | null {
 }
 
 /**
+ * Desbloquea el audio en el primer gesto del usuario. La política de autoplay del
+ * navegador solo permite (re)arrancar un `AudioContext` desde una interacción
+ * real; como la campana la dispara un evento del WebSocket (no un gesto), sin esto
+ * el contexto se quedaría suspendido y no sonaría. Registra un listener de un solo
+ * uso (`pointerdown`/`keydown`) que crea y reanuda el contexto durante el gesto.
+ * Devuelve una función de limpieza para quitar los listeners (p. ej. al desmontar).
+ */
+export function primeBell(): () => void {
+  if (typeof window === 'undefined') return () => {};
+  const unlock = () => {
+    const ctx = ensureContext();
+    if (ctx && ctx.state === 'suspended') void ctx.resume();
+  };
+  const opts: AddEventListenerOptions = { once: true };
+  window.addEventListener('pointerdown', unlock, opts);
+  window.addEventListener('keydown', unlock, opts);
+  return () => {
+    window.removeEventListener('pointerdown', unlock, opts);
+    window.removeEventListener('keydown', unlock, opts);
+  };
+}
+
+/**
  * Reproduce un timbre corto: un oscilador con una envolvente de ganancia que
  * decae, de modo que suene como una campana breve y no como un pitido plano.
  * No lanza nunca; si el audio no está disponible, simplemente no suena.

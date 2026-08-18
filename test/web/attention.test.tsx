@@ -182,6 +182,31 @@ describe('lib/bell · playBell', () => {
     const { playBell } = await freshBell();
     expect(() => playBell()).not.toThrow();
   });
+
+  it('primeBell reanuda el contexto en el primer gesto del usuario', async () => {
+    const { ctx, Ctor } = mockAudioContext();
+    const { primeBell } = await freshBell();
+
+    primeBell();
+    // Antes del gesto no se toca el audio (autoplay): el contexto no existe aún.
+    expect(Ctor).not.toHaveBeenCalled();
+
+    window.dispatchEvent(new Event('pointerdown'));
+    expect(Ctor).toHaveBeenCalledTimes(1);
+    expect(ctx.resume).toHaveBeenCalled();
+  });
+
+  it('primeBell limpia sus listeners al invocar la función devuelta', async () => {
+    const { Ctor } = mockAudioContext();
+    const { primeBell } = await freshBell();
+
+    const cleanup = primeBell();
+    cleanup();
+    window.dispatchEvent(new Event('pointerdown'));
+    window.dispatchEvent(new Event('keydown'));
+    // Tras limpiar, ningún gesto crea el contexto.
+    expect(Ctor).not.toHaveBeenCalled();
+  });
 });
 
 // ---------- lib/notify: preferencia + permiso ----------

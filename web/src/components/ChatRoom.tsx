@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Message } from 'shared/types';
@@ -6,6 +6,7 @@ import { useChat } from '../hooks/useChat';
 import { isValidRoom } from '../lib/room';
 import { readStoredName } from '../lib/identity';
 import { fireAttentionAlert } from '../lib/attention';
+import { primeBell } from '../lib/bell';
 import { PresenceBar } from './PresenceBar';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
@@ -50,6 +51,9 @@ function Room({ room }: { room: string }) {
   // Alerta al llegar en vivo un mensaje de intervención ajeno: campana siempre y,
   // según preferencia/permiso/foco, notificación del navegador.
   const onLiveAttention = useCallback((msg: Message) => fireAttentionAlert(msg, t), [t]);
+  // Desbloquea el audio en el primer gesto para que la campana (disparada por el
+  // WebSocket, no por una interacción) pueda sonar pese al autoplay del navegador.
+  useEffect(() => primeBell(), []);
   const { messages, online, status, myName, sendMessage } = useChat(room, name, onLiveAttention);
 
   return (
