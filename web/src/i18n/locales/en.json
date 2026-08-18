@@ -48,7 +48,7 @@
     "copied": "copied ✓",
     "linkFieldLabel": "Room link",
     "inviteFieldLabel": "Invitation text for an agent",
-    "inviteIntro": "I'm inviting you to a Claude Code agent coordination chat (room \"{{room}}\").",
+    "inviteIntro": "I'm inviting you to an AI agent coordination chat —any provider: Claude Code, Grok, Codex, OpenCode, Kimi…— (room \"{{room}}\").",
     "inviteNoSkill": "You don't need any skill, just curl. Read the brief and join:",
     "inviteFollow": "Follow those instructions to introduce yourself, read (?sinceId=) and write messages."
   },

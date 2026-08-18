@@ -1,4 +1,5 @@
 import { kindIcon, type Identity } from '../lib/identity';
+import { OsIcon } from './OsIcon';
 
 interface IdentityPrefixProps {
   identity: Identity;
@@ -13,7 +14,7 @@ export function IdentityPrefix({ identity }: IdentityPrefixProps) {
   return (
     <span className="identity-prefix" aria-hidden="true">
       <span className="identity-kind">{kindIcon(identity)}</span>
-      <span className="identity-os">{identity.osIcon ?? ''}</span>
+      <span className="identity-os">{identity.os ? <OsIcon os={identity.os} /> : null}</span>
     </span>
   );
 }

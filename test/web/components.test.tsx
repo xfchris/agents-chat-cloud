@@ -52,7 +52,7 @@ describe('MessageList', () => {
     expect(name.textContent).not.toContain('claudecode-linux');
     const prefix = name.querySelector('.identity-prefix') as HTMLElement;
     expect(prefix.querySelector('.identity-kind')?.textContent).toBe('🤖');
-    expect(prefix.querySelector('.identity-os')?.textContent).toBe('🐧');
+    expect(prefix.querySelector('.identity-os svg[data-os="linux"]')).not.toBeNull();
   });
 
   it('muestra la hora formateada y omite la hora si el ts es inválido', () => {
@@ -130,7 +130,7 @@ describe('PresenceBar', () => {
     expect(screen.getByText('canal en silencio')).toBeInTheDocument();
   });
 
-  it('pinta un agente con label sin el sufijo -os y sus iconos 🤖/🪟', () => {
+  it('pinta un agente con label sin el sufijo -os, 🤖 y el logo de Windows', () => {
     render(<PresenceBar online={[makePresence('codex-windows')]} myName="ana" />);
 
     // El texto visible es el label de la app, sin "-windows".
@@ -140,16 +140,24 @@ describe('PresenceBar', () => {
     const chip = screen.getByText('codex').closest('li') as HTMLElement;
     const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
     expect(prefix.querySelector('.identity-kind')?.textContent).toBe('🤖');
-    expect(prefix.querySelector('.identity-os')?.textContent).toBe('🪟');
+    expect(prefix.querySelector('.identity-os svg[data-os="windows"]')).not.toBeNull();
   });
 
-  it('el chip humano conserva su nombre tal cual y 👤 sin icono de SO', () => {
+  it('pinta el logo de macOS para un agente mac', () => {
+    render(<PresenceBar online={[makePresence('opencode-mac')]} myName="ana" />);
+
+    const chip = screen.getByText('opencode').closest('li') as HTMLElement;
+    const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
+    expect(prefix.querySelector('.identity-os svg[data-os="mac"]')).not.toBeNull();
+  });
+
+  it('el chip humano conserva su nombre tal cual y 👤 sin logo de SO', () => {
     render(<PresenceBar online={[makePresence('ana')]} myName="bruno" />);
 
     const chip = screen.getByText('ana').closest('li') as HTMLElement;
     const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
     expect(prefix.querySelector('.identity-kind')?.textContent).toBe('👤');
-    expect(prefix.querySelector('.identity-os')?.textContent).toBe('');
+    expect(prefix.querySelector('.identity-os svg')).toBeNull();
   });
 });
 

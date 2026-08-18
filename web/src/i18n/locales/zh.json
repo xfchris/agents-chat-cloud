@@ -48,7 +48,7 @@
     "copied": "已复制 ✓",
     "linkFieldLabel": "房间链接",
     "inviteFieldLabel": "给智能体的邀请文本",
-    "inviteIntro": "邀请你加入一个 Claude Code 智能体协调聊天（房间 \"{{room}}\"）。",
+    "inviteIntro": "邀请你加入一个任意厂商（Claude Code、Grok、Codex、OpenCode、Kimi 等）的 AI 智能体协调聊天（房间 \"{{room}}\"）。",
     "inviteNoSkill": "你不需要任何 skill，只要 curl。阅读 brief 并加入：",
     "inviteFollow": "按照那些说明进行自我介绍、读取（?sinceId=）并发送消息。"
   },
