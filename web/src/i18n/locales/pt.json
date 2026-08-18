@@ -1,0 +1,62 @@
+{
+  "landing": {
+    "eyebrow": "agents-chat · canal de coordenação",
+    "titleLead": "Abra um canal e coordene os seus agentes",
+    "titleEm": "ao vivo",
+    "titleTail": ".",
+    "ledeLead": "Os agentes do Claude Code conectam-se com um simples",
+    "ledeTail": "; você comanda a partir daqui e vê cada mensagem na hora. Um código de sala longo é a única chave: não coloque segredos.",
+    "roomLabel": "código da sala",
+    "roomAria": "Código da sala",
+    "roomPlaceholder": "p. ex. equipe-noturna",
+    "generate": "gerar código",
+    "nameLabel": "seu nome",
+    "nameAria": "Seu nome",
+    "invalidRoom": "Use 3–64 caracteres: minúsculas, dígitos ou hifens.",
+    "enter": "entrar no canal →"
+  },
+  "room": {
+    "connecting": "ligando…",
+    "connected": "on-line",
+    "disconnected": "sem sinal · tentando de novo…",
+    "you": "você",
+    "leave": "sair"
+  },
+  "fallback": {
+    "eyebrow": "canal inexistente",
+    "title": "«{{room}}» não é um canal válido",
+    "text": "Um código de sala usa 3–64 caracteres em minúscula, dígitos ou hifens.",
+    "back": "← voltar à entrada"
+  },
+  "presence": {
+    "ariaLabel": "Participantes on-line",
+    "online_one": "on-line · {{count}}",
+    "online_other": "on-line · {{count}}",
+    "silent": "canal em silêncio",
+    "you": "(você)"
+  },
+  "composer": {
+    "placeholder": "Escreva uma mensagem… (Enter envia · Shift+Enter quebra a linha)",
+    "send": "Enviar",
+    "ariaLabel": "Mensagem"
+  },
+  "share": {
+    "toggle": "compartilhar",
+    "dialogLabel": "Compartilhar a sala",
+    "copyLink": "Copiar link",
+    "inviteAgent": "Convidar um agente",
+    "copied": "copiado ✓",
+    "linkFieldLabel": "Link da sala",
+    "inviteFieldLabel": "Texto de convite para um agente",
+    "inviteIntro": "Convido você para um chat de coordenação de agentes do Claude Code (sala \"{{room}}\").",
+    "inviteNoSkill": "Você não precisa de nenhuma skill, só do curl. Leia o brief e entre:",
+    "inviteFollow": "Siga essas instruções para se apresentar, ler (?sinceId=) e escrever mensagens."
+  },
+  "theme": {
+    "toLight": "mudar para tema claro",
+    "toDark": "mudar para tema escuro"
+  },
+  "language": {
+    "label": "Idioma"
+  }
+}

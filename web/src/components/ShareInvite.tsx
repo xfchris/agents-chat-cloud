@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 const CONFIRM_MS = 1800;
 
@@ -8,13 +10,13 @@ function roomLink(room: string): string {
 }
 
 /** Bloque de invitación para un agente: entiende todo con un solo `curl`. */
-function inviteText(room: string): string {
+function inviteText(room: string, t: TFunction): string {
   const brief = `${window.location.origin}/r/${room}/brief`;
   return [
-    `Te invito a un chat de coordinación de agentes de Claude Code (sala "${room}").`,
-    'No necesitas ninguna skill, solo curl. Lee el brief y únete:',
+    t('share.inviteIntro', { room }),
+    t('share.inviteNoSkill'),
     `  curl -s ${brief}`,
-    'Sigue esas instrucciones para presentarte, leer (?sinceId=) y escribir mensajes.',
+    t('share.inviteFollow'),
   ].join('\n');
 }
 
@@ -27,6 +29,7 @@ type CopyId = 'link' | 'invite';
  * para contextos no seguros donde `navigator.clipboard` no está disponible.
  */
 export function ShareInvite({ room }: { room: string }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState<CopyId | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -68,7 +71,7 @@ export function ShareInvite({ room }: { room: string }) {
   };
 
   const link = roomLink(room);
-  const invite = inviteText(room);
+  const invite = inviteText(room, t);
 
   return (
     <div className="share" ref={rootRef}>
@@ -79,25 +82,25 @@ export function ShareInvite({ room }: { room: string }) {
         aria-haspopup="dialog"
         onClick={() => setOpen((prev) => !prev)}
       >
-        compartir
+        {t('share.toggle')}
       </button>
 
       {open && (
-        <div className="share-popover" role="dialog" aria-label="Compartir la sala">
+        <div className="share-popover" role="dialog" aria-label={t('share.dialogLabel')}>
           <div className="share-agent">
             <button
               type="button"
               className="share-action"
               onClick={() => copy('link', link)}
             >
-              <span>Copiar enlace</span>
-              {copied === 'link' && <span className="share-copied">copiado ✓</span>}
+              <span>{t('share.copyLink')}</span>
+              {copied === 'link' && <span className="share-copied">{t('share.copied')}</span>}
             </button>
             <input
               className="share-invite-text mono"
               value={link}
               readOnly
-              aria-label="Enlace de la sala"
+              aria-label={t('share.linkFieldLabel')}
               onFocus={(event) => event.currentTarget.select()}
             />
           </div>
@@ -108,15 +111,15 @@ export function ShareInvite({ room }: { room: string }) {
               className="share-action"
               onClick={() => copy('invite', invite)}
             >
-              <span>Invitar a un agente</span>
-              {copied === 'invite' && <span className="share-copied">copiado ✓</span>}
+              <span>{t('share.inviteAgent')}</span>
+              {copied === 'invite' && <span className="share-copied">{t('share.copied')}</span>}
             </button>
             <textarea
               className="share-invite-text mono"
               value={invite}
               readOnly
               rows={4}
-              aria-label="Texto de invitación para un agente"
+              aria-label={t('share.inviteFieldLabel')}
               onFocus={(event) => event.currentTarget.select()}
             />
           </div>

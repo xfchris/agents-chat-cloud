@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useChat } from '../hooks/useChat';
 import { isValidRoom } from '../lib/room';
 import { readStoredName } from '../lib/identity';
@@ -7,27 +8,27 @@ import { MessageList } from './MessageList';
 import { Composer } from './Composer';
 import { ShareInvite } from './ShareInvite';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
-const STATUS_LABEL = {
-  connecting: 'enlazando…',
-  connected: 'en línea',
-  disconnected: 'sin señal · reintentando…',
+const STATUS_KEY = {
+  connecting: 'room.connecting',
+  connected: 'room.connected',
+  disconnected: 'room.disconnected',
 } as const;
 
 /** Vista de una sala. Valida la ruta antes de abrir la conexión (hooks abajo). */
 export function ChatRoom() {
+  const { t } = useTranslation();
   const { room = '' } = useParams();
 
   if (!isValidRoom(room)) {
     return (
       <main className="fallback">
-        <p className="eyebrow">canal inexistente</p>
-        <h1>«{room}» no es un canal válido</h1>
-        <p className="fallback-text">
-          Un código de sala usa 3–64 caracteres en minúscula, dígitos o guiones.
-        </p>
+        <p className="eyebrow">{t('fallback.eyebrow')}</p>
+        <h1>{t('fallback.title', { room })}</h1>
+        <p className="fallback-text">{t('fallback.text')}</p>
         <Link className="ghost-link" to="/">
-          ← volver a la entrada
+          {t('fallback.back')}
         </Link>
       </main>
     );
@@ -39,6 +40,7 @@ export function ChatRoom() {
 }
 
 function Room({ room }: { room: string }) {
+  const { t } = useTranslation();
   // Nick fijo: se elige en la Landing y se lee una sola vez. No se edita en la sala.
   const name = readStoredName();
   const { messages, online, status, myName, sendMessage } = useChat(room, name);
@@ -52,16 +54,17 @@ function Room({ room }: { room: string }) {
             <span className="channel-hash">#</span>
             {room}
           </span>
-          <span className={`conn conn-${status}`}>{STATUS_LABEL[status]}</span>
+          <span className={`conn conn-${status}`}>{t(STATUS_KEY[status])}</span>
         </div>
         <p className="identity">
-          <span className="identity-label">tú</span>
+          <span className="identity-label">{t('room.you')}</span>
           <span className="identity-name mono">{myName}</span>
         </p>
         <ShareInvite room={room} />
+        <LanguageSwitcher />
         <ThemeToggle />
         <Link className="ghost-link" to="/">
-          salir
+          {t('room.leave')}
         </Link>
       </header>
 

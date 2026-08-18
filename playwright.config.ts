@@ -28,6 +28,11 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',
+    // i18n (SPEC 08): fija el navegador en español para que la app arranque en ese
+    // idioma. Sin `locale`, el LanguageDetector usa `navigator.language` del runner
+    // (en-US en CI) y la UI saldría en inglés, rompiendo las aserciones de texto en
+    // español ("en línea", "Enviar", "Mensaje").
+    locale: 'es-ES',
   },
   projects: [
     {

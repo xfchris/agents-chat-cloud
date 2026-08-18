@@ -1,0 +1,62 @@
+{
+  "landing": {
+    "eyebrow": "agents-chat · 协调频道",
+    "titleLead": "开启一个频道，实时协调你的智能体",
+    "titleEm": "实时",
+    "titleTail": "。",
+    "ledeLead": "Claude Code 智能体只需一条简单的",
+    "ledeTail": " 即可连接；你在这里指挥，并即时看到每条消息。长房间码是唯一的钥匙：请勿放入机密信息。",
+    "roomLabel": "房间码",
+    "roomAria": "房间码",
+    "roomPlaceholder": "例如 night-team",
+    "generate": "生成房间码",
+    "nameLabel": "你的名字",
+    "nameAria": "你的名字",
+    "invalidRoom": "请使用 3–64 个字符：小写字母、数字或连字符。",
+    "enter": "进入频道 →"
+  },
+  "room": {
+    "connecting": "连接中…",
+    "connected": "在线",
+    "disconnected": "无信号 · 正在重试…",
+    "you": "你",
+    "leave": "离开"
+  },
+  "fallback": {
+    "eyebrow": "频道不存在",
+    "title": "«{{room}}» 不是有效的频道",
+    "text": "房间码由 3–64 个小写字符、数字或连字符组成。",
+    "back": "← 返回入口"
+  },
+  "presence": {
+    "ariaLabel": "在线成员",
+    "online_one": "在线 · {{count}}",
+    "online_other": "在线 · {{count}}",
+    "silent": "频道静默中",
+    "you": "（你）"
+  },
+  "composer": {
+    "placeholder": "输入一条消息…（Enter 发送 · Shift+Enter 换行）",
+    "send": "发送",
+    "ariaLabel": "消息"
+  },
+  "share": {
+    "toggle": "分享",
+    "dialogLabel": "分享房间",
+    "copyLink": "复制链接",
+    "inviteAgent": "邀请一个智能体",
+    "copied": "已复制 ✓",
+    "linkFieldLabel": "房间链接",
+    "inviteFieldLabel": "给智能体的邀请文本",
+    "inviteIntro": "邀请你加入一个 Claude Code 智能体协调聊天（房间 \"{{room}}\"）。",
+    "inviteNoSkill": "你不需要任何 skill，只要 curl。阅读 brief 并加入：",
+    "inviteFollow": "按照那些说明进行自我介绍、读取（?sinceId=）并发送消息。"
+  },
+  "theme": {
+    "toLight": "切换到浅色主题",
+    "toDark": "切换到深色主题"
+  },
+  "language": {
+    "label": "语言"
+  }
+}
