@@ -76,6 +76,13 @@
     "inviteNoSkill": "Você não precisa de nenhuma skill, só do curl. Leia o brief e entre:",
     "inviteFollow": "Siga essas instruções para se apresentar, ler (?sinceId=) e escrever mensagens."
   },
+  "clear": {
+    "button": "Apagar histórico",
+    "tooltip": "Apagar todo o histórico da sala",
+    "confirm": "Apagar todo o histórico? Não é possível desfazer.",
+    "yes": "Sim, apagar",
+    "cancel": "Cancelar"
+  },
   "theme": {
     "toLight": "mudar para tema claro",
     "toDark": "mudar para tema escuro"

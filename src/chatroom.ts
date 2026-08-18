@@ -19,7 +19,7 @@ const MAX_BODY_BYTES = 200000;
 const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'content-type',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+  'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS',
 };
 
 function messageKey(id: number): string {
@@ -73,6 +73,9 @@ export class ChatRoom {
     if (request.method === 'POST' && path === '/messages') {
       return this.handlePostMessage(request);
     }
+    if (request.method === 'DELETE' && path === '/messages') {
+      return this.handleClearHistory();
+    }
     if (request.method === 'GET' && path === '/presence') {
       return json(this.onlineList());
     }
@@ -122,6 +125,17 @@ export class ChatRoom {
     const resolvedKind: MessageKind = kind === 'attention' ? 'attention' : 'msg';
     const msg = await this.appendMessage({ name, text, kind: resolvedKind });
     return json(msg, 201);
+  }
+
+  private async handleClearHistory(): Promise<Response> {
+    // Borra todas las claves `msg:*` pero conserva `seq` monótono: el system
+    // message que sigue recibe el próximo id, así los agentes que sondean con
+    // `?sinceId=<viejo>` lo ven y no se reutilizan ids.
+    const keys = [...(await this.state.storage.list({ prefix: 'msg:' })).keys()];
+    if (keys.length > 0) await this.state.storage.delete(keys);
+    this.broadcast({ type: 'cleared' });
+    await this.appendMessage({ name: 'sistema', text: 'Historial borrado', kind: 'system' });
+    return json({ cleared: keys.length });
   }
 
   private async handlePostPresence(request: Request): Promise<Response> {
@@ -366,6 +380,7 @@ Comandos:
   enviar: curl -s -X POST ${base}/messages -H 'content-type: application/json' \\
               -d '{"name":"tu-nombre","text":"..."}'
   leer:   curl -s '${base}/messages?sinceId=<ultimo-id>'
+  borrar historial: curl -s -X DELETE ${base}/messages
 
   pedir intervención humana:
     Marca un mensaje como alerta para avisar al humano (campana + notificación en

@@ -104,6 +104,32 @@ describe('useChat · eventos entrantes', () => {
     expect(result.current.online.map((e) => e.name)).toEqual(['ana', 'bruno']);
   });
 
+  it('cleared vacía los mensajes y admite el system message posterior', () => {
+    const { result } = renderHook(() => useChat('sala-1', 'ana'));
+
+    act(() => {
+      MockWebSocket.last.open();
+      MockWebSocket.last.emit({
+        type: 'history',
+        history: [makeMessage({ id: 1, text: 'uno' }), makeMessage({ id: 2, text: 'dos' })],
+      });
+    });
+    expect(result.current.messages).toHaveLength(2);
+
+    act(() => MockWebSocket.last.emit({ type: 'cleared' }));
+    expect(result.current.messages).toEqual([]);
+
+    // El system message que difunde el backend tras el cleared entra pese a que
+    // su id (3) es mayor que los ya vistos: el dedup se reinició.
+    act(() => {
+      MockWebSocket.last.emit({
+        type: 'msg',
+        msg: makeMessage({ id: 3, name: 'sistema', text: 'Historial borrado', kind: 'system' }),
+      });
+    });
+    expect(result.current.messages.map((m) => m.text)).toEqual(['Historial borrado']);
+  });
+
   it('ignora payloads no-JSON sin romper', () => {
     const { result } = renderHook(() => useChat('sala-1', 'ana'));
 

@@ -76,6 +76,13 @@
     "inviteNoSkill": "你不需要任何 skill，只要 curl。阅读 brief 并加入：",
     "inviteFollow": "按照那些说明进行自我介绍、读取（?sinceId=）并发送消息。"
   },
+  "clear": {
+    "button": "清空历史",
+    "tooltip": "清空该房间的全部历史",
+    "confirm": "确定清空全部历史吗？此操作无法撤销。",
+    "yes": "确定清空",
+    "cancel": "取消"
+  },
   "theme": {
     "toLight": "切换到浅色主题",
     "toDark": "切换到深色主题"

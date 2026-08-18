@@ -32,6 +32,9 @@
   --signal-wash: rgba(47, 212, 189, 0.08);
   --amber: #e6ac54;
   --danger: #e2565b;
+  --danger-surface: rgba(226, 86, 91, 0.1);
+  --danger-line: rgba(226, 86, 91, 0.55);
+  --danger-glow: rgba(226, 86, 91, 0.22);
   --live: #3ddc84;
   --pulse-glow: rgba(61, 220, 132, 0.16);
 
@@ -92,6 +95,9 @@
   --signal-wash: rgba(15, 118, 110, 0.08);
   --amber: #8a5000;
   --danger: #c02626;
+  --danger-surface: rgba(192, 38, 38, 0.08);
+  --danger-line: rgba(192, 38, 38, 0.5);
+  --danger-glow: rgba(192, 38, 38, 0.18);
   --live: #15803d;
   --pulse-glow: rgba(21, 128, 61, 0.22);
 
@@ -613,6 +619,101 @@ code {
 }
 
 .share-invite-text:focus-visible {
+  outline: none;
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+/* ---------- Borrar historial (acción destructiva con confirmación) ---------- */
+
+.clear {
+  position: relative;
+  display: flex;
+}
+
+.clear-toggle {
+  cursor: pointer;
+}
+
+.clear-toggle:hover,
+.clear-toggle[aria-expanded='true'] {
+  color: var(--danger);
+  border-color: var(--danger-line);
+}
+
+.clear-toggle:focus-visible {
+  outline: none;
+  color: var(--danger);
+  border-color: var(--danger-line);
+  box-shadow: 0 0 0 3px var(--danger-glow);
+}
+
+.clear-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: min(280px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--danger-line);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 48px -24px var(--shadow);
+}
+
+.clear-confirm {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.clear-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.clear-danger,
+.clear-cancel {
+  flex: 1;
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.clear-danger {
+  color: var(--danger);
+  background: var(--danger-surface);
+  border: 1px solid var(--danger-line);
+}
+
+.clear-danger:hover {
+  background: var(--danger-glow);
+}
+
+.clear-danger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--danger-glow);
+}
+
+.clear-cancel {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
+.clear-cancel:hover {
+  background: var(--surface-2);
+}
+
+.clear-cancel:focus-visible {
   outline: none;
   border-color: var(--signal-dim);
   box-shadow: 0 0 0 3px var(--signal-glow);

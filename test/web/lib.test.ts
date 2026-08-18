@@ -9,7 +9,7 @@ import {
   readStoredName,
   storeName,
 } from '../../web/src/lib/identity';
-import { fetchBrief, fetchMessages, fetchPresence } from '../../web/src/lib/api';
+import { clearMessages, fetchBrief, fetchMessages, fetchPresence } from '../../web/src/lib/api';
 import { applyTheme, resolveTheme, storeTheme } from '../../web/src/lib/theme';
 import { makeMessage } from './helpers';
 
@@ -344,5 +344,18 @@ describe('lib/api', () => {
 
     await fetchPresence('a b');
     expect(fetchMock).toHaveBeenCalledWith('/r/a%20b/presence');
+  });
+
+  it('clearMessages hace DELETE a /r/<room>/messages y resuelve si ok', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200 });
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(clearMessages('sala-1')).resolves.toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledWith('/r/sala-1/messages', { method: 'DELETE' });
+  });
+
+  it('clearMessages lanza si la respuesta no es ok', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }));
+    await expect(clearMessages('sala-1')).rejects.toThrow('500');
   });
 });
