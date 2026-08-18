@@ -33,6 +33,8 @@ criterios de aceptación distintos, que se lanzan y verifican por separado.
 - `07-tema-claro-oscuro.md` — extiende `frontend` (tema claro/oscuro conmutable)
 - `08-i18n-multiidioma.md` — extiende `frontend` (i18n ES/EN/PT/ZH con react-i18next)
 - `09-pulido-visual-tema-e-iconos-so.md` — refina `frontend` (tema claro con jerarquía + iconos SVG de SO; depende de 06 y 07)
+- `10-refinamientos-ux-roster-tooltips-codigo.md` — refina `frontend` (tooltips i18n + código de sala pre-generado + roster separado agentes/personas; depende de 03, 06, 08)
+- `11-alertas-intervencion-humana.md` — extiende `backend`+`frontend` (nuevo `kind:'attention'` + campana Web Audio + notificaciones opt-in; depende de 02, 03, 06, 07, 08)
 
 ## Reglas del mapa
 
