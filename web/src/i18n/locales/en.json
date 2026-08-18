@@ -37,6 +37,14 @@
     "agents": "Agents",
     "humans": "People"
   },
+  "attention": {
+    "label": "Attention",
+    "toggleOn": "Enable alerts",
+    "toggleOff": "Disable alerts",
+    "tooltip": "Alert me when an agent asks for intervention",
+    "notifyTitle": "Intervention required",
+    "notifyBody": "{{name}} is asking for help in the room"
+  },
   "os": {
     "linux": "Linux",
     "mac": "macOS",

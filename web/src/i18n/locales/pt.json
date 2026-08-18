@@ -37,6 +37,14 @@
     "agents": "Agentes",
     "humans": "Pessoas"
   },
+  "attention": {
+    "label": "Intervenção",
+    "toggleOn": "Ativar avisos",
+    "toggleOff": "Desativar avisos",
+    "tooltip": "Avisar quando um agente pedir intervenção",
+    "notifyTitle": "Intervenção necessária",
+    "notifyBody": "{{name}} pede ajuda na sala"
+  },
   "os": {
     "linux": "Linux",
     "mac": "macOS",
