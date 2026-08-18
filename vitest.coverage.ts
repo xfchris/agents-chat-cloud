@@ -10,10 +10,19 @@ const THRESHOLD = 90;
 
 type Provider = 'v8' | 'istanbul';
 
-export function coverageFor(include: string[], provider: Provider = 'v8') {
+// `reportsDirectory` se separa por proyecto para que backend y web no se pisen su
+// `lcov.info` (ambos van por defecto a `./coverage`). El reporter `lcov` es el que
+// consume Codecov; `text` se mantiene para leer el resumen en consola/CI.
+export function coverageFor(
+  include: string[],
+  provider: Provider = 'v8',
+  reportsDirectory?: string,
+) {
   return {
     provider,
     include,
+    reporter: ['text', 'lcov'],
+    ...(reportsDirectory ? { reportsDirectory } : {}),
     thresholds: {
       lines: THRESHOLD,
       functions: THRESHOLD,

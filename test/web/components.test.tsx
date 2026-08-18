@@ -206,8 +206,8 @@ describe('PresenceBar', () => {
   });
 });
 
-describe('Tooltips (title nativo traducido)', () => {
-  it('el logo de SO expone su title por sistema (Linux/macOS/Windows)', () => {
+describe('Tooltips (burbuja estilizada traducida)', () => {
+  it('el logo de SO expone su tooltip por sistema (Linux/macOS/Windows)', () => {
     render(
       <PresenceBar
         online={[
@@ -219,9 +219,14 @@ describe('Tooltips (title nativo traducido)', () => {
       />,
     );
 
-    expect(screen.getByTitle('Linux')).not.toBeNull();
-    expect(screen.getByTitle('macOS')).not.toBeNull();
-    expect(screen.getByTitle('Windows')).not.toBeNull();
+    // El `title` nativo se sustituyó por un `<Tooltip>` propio: burbuja role=tooltip.
+    expect(screen.getByText('Linux')).toHaveAttribute('role', 'tooltip');
+    expect(screen.getByText('macOS')).toHaveAttribute('role', 'tooltip');
+    expect(screen.getByText('Windows')).toHaveAttribute('role', 'tooltip');
+    // Los iconos de SO usan placement `top` (no están en la cabecera).
+    expect(screen.getByText('Linux')).toHaveClass('tt-top');
+    // Ya no queda el atributo `title` nativo.
+    expect(screen.queryByTitle('Linux')).toBeNull();
   });
 
   it('el icono de tipo expone Agente para 🤖 y Persona para 👤', () => {
@@ -232,10 +237,15 @@ describe('Tooltips (title nativo traducido)', () => {
       />,
     );
 
-    const agentTitle = screen.getByTitle('Agente');
-    const humanTitle = screen.getByTitle('Persona');
-    expect(agentTitle.textContent).toBe('🤖');
-    expect(humanTitle.textContent).toBe('👤');
+    // Burbujas traducidas del tipo…
+    expect(screen.getByText('Agente')).toHaveAttribute('role', 'tooltip');
+    expect(screen.getByText('Persona')).toHaveAttribute('role', 'tooltip');
+    // …con placement `top` (icono de tipo, fuera de la cabecera).
+    expect(screen.getByText('Agente')).toHaveClass('tt-top');
+    // …y sus iconos, ya en un elemento aparte del disparador.
+    expect(screen.getByText('🤖')).toBeInTheDocument();
+    expect(screen.getByText('👤')).toBeInTheDocument();
+    expect(screen.queryByTitle('Agente')).toBeNull();
   });
 });
 

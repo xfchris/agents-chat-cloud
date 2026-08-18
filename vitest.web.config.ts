@@ -18,6 +18,6 @@ export default defineConfig({
     globals: true,
     setupFiles: ['test/web/setup.ts'],
     include: ['test/web/**/*.test.{ts,tsx}'],
-    coverage: coverageFor(['web/src/**/*.{ts,tsx}']),
+    coverage: coverageFor(['web/src/**/*.{ts,tsx}'], 'v8', './coverage/web'),
   },
 });
