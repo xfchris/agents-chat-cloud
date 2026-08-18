@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { AgentOs } from '../lib/identity';
+import { Tooltip } from './Tooltip';
 
 // Logos oficiales monocromos del SO (Tux/Apple) y un grid de 4 paneles para
 // Windows. Tamaño y color los define el CSS de `.os-icon`; el trazo hereda el
@@ -18,22 +19,23 @@ interface OsIconProps {
 
 /**
  * Logo monocromo del sistema operativo del agente. Decorativo (`aria-hidden`):
- * la accesibilidad la aporta el `label` textual de la identidad. El `<title>`
- * traducido da un tooltip nativo al pasar el ratón por el logo. Puro y sin
- * estado; el tamaño y color los define `.os-icon` en CSS.
+ * la accesibilidad la aporta el `label` textual de la identidad. Un `<Tooltip>`
+ * estilizado y traducido muestra el nombre del SO al pasar el ratón por el logo.
+ * Puro y sin estado; el tamaño y color los define `.os-icon` en CSS.
  */
 export function OsIcon({ os }: OsIconProps) {
   const { t } = useTranslation();
   return (
-    <svg
-      className="os-icon"
-      viewBox="0 0 24 24"
-      data-os={os}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <title>{t(`os.${os}`)}</title>
-      <path d={OS_PATHS[os]} fill="currentColor" />
-    </svg>
+    <Tooltip label={t(`os.${os}`)} placement="top">
+      <svg
+        className="os-icon"
+        viewBox="0 0 24 24"
+        data-os={os}
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d={OS_PATHS[os]} fill="currentColor" />
+      </svg>
+    </Tooltip>
   );
 }

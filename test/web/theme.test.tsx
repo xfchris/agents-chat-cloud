@@ -57,8 +57,13 @@ describe('ThemeToggle', () => {
 
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-label', 'cambiar a tema claro');
-    // El tooltip (title) usa la clave genérica `tooltip.theme`, no el destino.
-    expect(button).toHaveAttribute('title', 'Cambiar tema');
+    // El tooltip (burbuja propia) usa la clave genérica `tooltip.theme`, no el destino;
+    // el `title` nativo ya no existe.
+    const tip = screen.getByRole('tooltip', { hidden: true });
+    expect(tip).toHaveTextContent('Cambiar tema');
+    // Control de cabecera → placement `bottom` (evita recorte contra el borde superior).
+    expect(tip).toHaveClass('tt-bottom');
+    expect(button).not.toHaveAttribute('title');
     expect(button.textContent).toContain('☀️');
   });
 

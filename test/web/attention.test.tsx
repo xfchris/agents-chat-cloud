@@ -436,7 +436,11 @@ describe('NotificationToggle', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-pressed', 'false');
     expect(button).toHaveAttribute('aria-label', 'Activar avisos');
-    expect(button).toHaveAttribute('title', 'Avisar cuando un agente pida intervención');
+    // El `title` nativo se sustituyó por un `<Tooltip>` propio (burbuja role=tooltip).
+    expect(screen.getByRole('tooltip', { hidden: true })).toHaveTextContent(
+      'Avisar cuando un agente pida intervención',
+    );
+    expect(button).not.toHaveAttribute('title');
   });
 
   it('al activarlo pide permiso, persiste la preferencia y pasa a 🔔', async () => {
@@ -514,11 +518,11 @@ describe('SPEC 11 · textos de intervención en los cuatro idiomas', () => {
     expect(tag.textContent).toContain(label);
     unmount();
 
-    // El toggle arranca desactivado: su aria-label es `toggleOn` y el title el tooltip.
+    // El toggle arranca desactivado: su aria-label es `toggleOn` y la burbuja el tooltip.
     render(<NotificationToggle />);
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-label', toggleOn);
-    expect(button).toHaveAttribute('title', tooltip);
+    expect(screen.getByRole('tooltip', { hidden: true })).toHaveTextContent(tooltip);
   });
 });
 
