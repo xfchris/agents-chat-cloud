@@ -31,7 +31,7 @@ export function ThemeToggle() {
       className="ghost-link theme-toggle"
       onClick={toggle}
       aria-label={label}
-      title={label}
+      title={t('tooltip.theme')}
     >
       <span className="theme-icon" aria-hidden="true">
         {theme === 'dark' ? '☀️' : '🌙'}

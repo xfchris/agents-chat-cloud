@@ -33,7 +33,23 @@
     "online_one": "online · {{count}}",
     "online_other": "online · {{count}}",
     "silent": "quiet channel",
-    "you": "(you)"
+    "you": "(you)",
+    "agents": "Agents",
+    "humans": "People"
+  },
+  "os": {
+    "linux": "Linux",
+    "mac": "macOS",
+    "windows": "Windows"
+  },
+  "identity": {
+    "agent": "Agent",
+    "human": "Person"
+  },
+  "tooltip": {
+    "theme": "Change theme",
+    "language": "Change language",
+    "share": "Share room"
   },
   "composer": {
     "placeholder": "Write a message… (Enter sends · Shift+Enter adds a line break)",

@@ -33,6 +33,24 @@ describe('Landing', () => {
     expect(screen.getByRole('button', { name: 'generar código' })).toBeInTheDocument();
   });
 
+  it('al cargar, el campo de sala trae un código pre-generado que cumple ROOM_RE', () => {
+    renderWithRouter(<App />, { route: '/' });
+
+    const input = screen.getByLabelText('Código de sala') as HTMLInputElement;
+    expect(input.value).not.toBe('');
+    expect(ROOM_RE.test(input.value)).toBe(true);
+  });
+
+  it('con el código pre-generado, entrar al canal navega sin tocar nada', async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<App />, { route: '/' });
+
+    const code = (screen.getByLabelText('Código de sala') as HTMLInputElement).value;
+    await user.click(screen.getByRole('button', { name: 'entrar al canal →' }));
+
+    expect(MockWebSocket.last.url).toMatch(new RegExp(`/r/${code}/ws$`));
+  });
+
   it('generar código rellena el input con algo que cumple ROOM_RE', async () => {
     const user = userEvent.setup();
     renderWithRouter(<App />, { route: '/' });
@@ -47,7 +65,9 @@ describe('Landing', () => {
     const user = userEvent.setup();
     renderWithRouter(<App />, { route: '/' });
 
-    await user.type(screen.getByLabelText('Código de sala'), 'equipo-nocturno');
+    const roomInput = screen.getByLabelText('Código de sala');
+    await user.clear(roomInput); // viene precargado con un código pre-generado
+    await user.type(roomInput, 'equipo-nocturno');
     const nameInput = screen.getByLabelText('Tu nombre');
     await user.clear(nameInput); // viene precargado con el default `humano`
     await user.type(nameInput, 'ana');
@@ -64,7 +84,9 @@ describe('Landing', () => {
     const user = userEvent.setup();
     renderWithRouter(<App />, { route: '/' });
 
-    await user.type(screen.getByLabelText('Código de sala'), '  SALA-1  ');
+    const roomInput = screen.getByLabelText('Código de sala');
+    await user.clear(roomInput); // viene precargado con un código pre-generado
+    await user.type(roomInput, '  SALA-1  ');
     await user.click(screen.getByRole('button', { name: 'entrar al canal →' }));
 
     expect(MockWebSocket.last.url).toMatch(/\/r\/sala-1\/ws$/);
@@ -74,13 +96,27 @@ describe('Landing', () => {
     const user = userEvent.setup();
     renderWithRouter(<App />, { route: '/' });
 
-    await user.type(screen.getByLabelText('Código de sala'), 'ab');
+    const roomInput = screen.getByLabelText('Código de sala');
+    await user.clear(roomInput); // viene precargado con un código pre-generado
+    await user.type(roomInput, 'ab');
     await user.click(screen.getByRole('button', { name: 'entrar al canal →' }));
 
     expect(screen.getByRole('alert')).toBeInTheDocument();
     // No se abrió ningún WS: seguimos en la landing.
     expect(MockWebSocket.instances).toHaveLength(0);
     expect(screen.getByRole('button', { name: 'generar código' })).toBeInTheDocument();
+  });
+
+  it('si generar el código lanza (crypto ausente), la Landing carga con el campo vacío', () => {
+    vi.spyOn(crypto, 'getRandomValues').mockImplementation(() => {
+      throw new Error('sin crypto');
+    });
+    renderWithRouter(<App />, { route: '/' });
+
+    const input = screen.getByLabelText('Código de sala') as HTMLInputElement;
+    expect(input.value).toBe('');
+    // El render no se rompe: sigue habiendo botón de entrada.
+    expect(screen.getByRole('button', { name: 'entrar al canal →' })).toBeInTheDocument();
   });
 
   it('el input de sala precarga el nombre guardado en localStorage', () => {

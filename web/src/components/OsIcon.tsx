@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { AgentOs } from '../lib/identity';
 
 // Logos oficiales monocromos del SO (Tux/Apple) y un grid de 4 paneles para
@@ -17,10 +18,12 @@ interface OsIconProps {
 
 /**
  * Logo monocromo del sistema operativo del agente. Decorativo (`aria-hidden`):
- * la accesibilidad la aporta el `label` textual de la identidad. Puro y sin
+ * la accesibilidad la aporta el `label` textual de la identidad. El `<title>`
+ * traducido da un tooltip nativo al pasar el ratón por el logo. Puro y sin
  * estado; el tamaño y color los define `.os-icon` en CSS.
  */
 export function OsIcon({ os }: OsIconProps) {
+  const { t } = useTranslation();
   return (
     <svg
       className="os-icon"
@@ -29,6 +32,7 @@ export function OsIcon({ os }: OsIconProps) {
       aria-hidden="true"
       focusable="false"
     >
+      <title>{t(`os.${os}`)}</title>
       <path d={OS_PATHS[os]} fill="currentColor" />
     </svg>
   );

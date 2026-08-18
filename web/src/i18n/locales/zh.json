@@ -33,7 +33,23 @@
     "online_one": "在线 · {{count}}",
     "online_other": "在线 · {{count}}",
     "silent": "频道静默中",
-    "you": "（你）"
+    "you": "（你）",
+    "agents": "智能体",
+    "humans": "人类"
+  },
+  "os": {
+    "linux": "Linux",
+    "mac": "macOS",
+    "windows": "Windows"
+  },
+  "identity": {
+    "agent": "智能体",
+    "human": "人类"
+  },
+  "tooltip": {
+    "theme": "切换主题",
+    "language": "切换语言",
+    "share": "分享房间"
   },
   "composer": {
     "placeholder": "输入一条消息…（Enter 发送 · Shift+Enter 换行）",

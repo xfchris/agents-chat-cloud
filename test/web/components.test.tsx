@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MessageList } from '../../web/src/components/MessageList';
 import { PresenceBar } from '../../web/src/components/PresenceBar';
@@ -158,6 +158,84 @@ describe('PresenceBar', () => {
     const prefix = chip.querySelector('.identity-prefix') as HTMLElement;
     expect(prefix.querySelector('.identity-kind')?.textContent).toBe('👤');
     expect(prefix.querySelector('.identity-os svg')).toBeNull();
+  });
+
+  it('con nombres mixtos separa en dos grupos: Agentes y Personas', () => {
+    render(
+      <PresenceBar
+        online={[makePresence('claudecode-linux'), makePresence('ana')]}
+        myName="ana"
+      />,
+    );
+
+    // Dos encabezados de grupo traducidos.
+    const agents = screen.getByRole('heading', { name: 'Agentes' });
+    const humans = screen.getByRole('heading', { name: 'Personas' });
+    expect(agents).toBeInTheDocument();
+    expect(humans).toBeInTheDocument();
+
+    // Cada chip cuelga del grupo correcto.
+    const agentGroup = agents.closest('.presence-group') as HTMLElement;
+    const humanGroup = humans.closest('.presence-group') as HTMLElement;
+    expect(within(agentGroup).getByText('claudecode')).toBeInTheDocument();
+    expect(within(humanGroup).getByText('ana')).toBeInTheDocument();
+
+    // El contador combinado no cambia respecto a SPEC 06.
+    expect(screen.getByText('en línea · 2')).toBeInTheDocument();
+  });
+
+  it('solo humanos: muestra Personas y omite el encabezado Agentes', () => {
+    render(<PresenceBar online={[makePresence('ana'), makePresence('bruno')]} myName="ana" />);
+
+    expect(screen.getByRole('heading', { name: 'Personas' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Agentes' })).toBeNull();
+  });
+
+  it('solo agentes: muestra Agentes y omite el encabezado Personas', () => {
+    render(<PresenceBar online={[makePresence('codex-windows')]} myName="ana" />);
+
+    expect(screen.getByRole('heading', { name: 'Agentes' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Personas' })).toBeNull();
+  });
+
+  it('roster vacío: no renderiza ningún encabezado de grupo', () => {
+    render(<PresenceBar online={[]} myName="ana" />);
+
+    expect(screen.queryByRole('heading', { name: 'Agentes' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Personas' })).toBeNull();
+  });
+});
+
+describe('Tooltips (title nativo traducido)', () => {
+  it('el logo de SO expone su title por sistema (Linux/macOS/Windows)', () => {
+    render(
+      <PresenceBar
+        online={[
+          makePresence('claudecode-linux'),
+          makePresence('opencode-mac'),
+          makePresence('codex-windows'),
+        ]}
+        myName="ana"
+      />,
+    );
+
+    expect(screen.getByTitle('Linux')).not.toBeNull();
+    expect(screen.getByTitle('macOS')).not.toBeNull();
+    expect(screen.getByTitle('Windows')).not.toBeNull();
+  });
+
+  it('el icono de tipo expone Agente para 🤖 y Persona para 👤', () => {
+    render(
+      <PresenceBar
+        online={[makePresence('claudecode-linux'), makePresence('ana')]}
+        myName="ana"
+      />,
+    );
+
+    const agentTitle = screen.getByTitle('Agente');
+    const humanTitle = screen.getByTitle('Persona');
+    expect(agentTitle.textContent).toBe('🤖');
+    expect(humanTitle.textContent).toBe('👤');
   });
 });
 

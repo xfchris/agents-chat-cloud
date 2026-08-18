@@ -611,6 +611,24 @@ code {
   color: var(--muted);
 }
 
+/* Grupo del roster (Agentes / Personas): encabezado tenue sobre su lista de
+   chips. Los tokens de tema mantienen el contraste en claro y oscuro. */
+.presence-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.presence-group-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
 .presence-list {
   display: flex;
   flex-direction: column;
@@ -881,6 +899,9 @@ code {
     max-height: 40vh;
     border-left: 0;
     border-bottom: 1px solid var(--line);
+  }
+  .presence-group {
+    flex-basis: 100%;
   }
   .presence-list {
     flex-direction: row;

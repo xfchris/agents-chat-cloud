@@ -206,6 +206,55 @@ describe('i18n · detección y fallback', () => {
   });
 });
 
+describe('i18n · textos nuevos de SPEC 10 se traducen al cambiar de idioma', () => {
+  it('el title del selector de idioma sale de i18n y cambia con el idioma', async () => {
+    render(<LanguageSwitcher />);
+    const select = () => screen.getByRole('combobox');
+
+    // Arranca en `es`: title = tooltip.language.
+    expect(select()).toHaveAttribute('title', 'Cambiar idioma');
+
+    await switchTo('en');
+    expect(select()).toHaveAttribute('title', 'Change language');
+  });
+
+  it('los encabezados del roster (Agentes/Personas) se traducen al cambiar de idioma', async () => {
+    render(
+      <PresenceBar
+        online={[makePresence('claudecode-linux'), makePresence('ana')]}
+        myName="ana"
+      />,
+    );
+
+    // Español.
+    expect(screen.getByRole('heading', { name: 'Agentes' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Personas' })).toBeInTheDocument();
+
+    await switchTo('en');
+    expect(screen.getByRole('heading', { name: 'Agents' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'People' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Agentes' })).toBeNull();
+  });
+
+  it('el tooltip de tipo (Agente/Persona) se traduce al cambiar de idioma', async () => {
+    render(
+      <PresenceBar
+        online={[makePresence('claudecode-linux'), makePresence('ana')]}
+        myName="ana"
+      />,
+    );
+
+    // Español: title del prefijo de tipo.
+    expect(screen.getByTitle('Agente')).toBeInTheDocument();
+    expect(screen.getByTitle('Persona')).toBeInTheDocument();
+
+    await switchTo('en');
+    expect(screen.getByTitle('Agent')).toBeInTheDocument();
+    expect(screen.getByTitle('Person')).toBeInTheDocument();
+    expect(screen.queryByTitle('Agente')).toBeNull();
+  });
+});
+
 describe('LanguageSwitcher · robustez de normalización', () => {
   // Fuerza `resolvedLanguage` a un valor arbitrario para ejercitar las ramas de
   // normalización sin depender de que i18next lo resuelva a un soportado.

@@ -33,7 +33,23 @@
     "online_one": "en línea · {{count}}",
     "online_other": "en línea · {{count}}",
     "silent": "canal en silencio",
-    "you": "(tú)"
+    "you": "(tú)",
+    "agents": "Agentes",
+    "humans": "Personas"
+  },
+  "os": {
+    "linux": "Linux",
+    "mac": "macOS",
+    "windows": "Windows"
+  },
+  "identity": {
+    "agent": "Agente",
+    "human": "Persona"
+  },
+  "tooltip": {
+    "theme": "Cambiar tema",
+    "language": "Cambiar idioma",
+    "share": "Compartir sala"
   },
   "composer": {
     "placeholder": "Escribe un mensaje… (Enter envía · Shift+Enter salta de línea)",
