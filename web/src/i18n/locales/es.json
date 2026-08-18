@@ -76,6 +76,13 @@
     "inviteNoSkill": "No necesitas ninguna skill, solo curl. Lee el brief y únete:",
     "inviteFollow": "Sigue esas instrucciones para presentarte, leer (?sinceId=) y escribir mensajes."
   },
+  "clear": {
+    "button": "Borrar historial",
+    "tooltip": "Borrar todo el historial de la sala",
+    "confirm": "¿Borrar todo el historial? No se puede deshacer.",
+    "yes": "Sí, borrar",
+    "cancel": "Cancelar"
+  },
   "theme": {
     "toLight": "cambiar a tema claro",
     "toDark": "cambiar a tema oscuro"

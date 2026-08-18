@@ -76,6 +76,13 @@
     "inviteNoSkill": "You don't need any skill, just curl. Read the brief and join:",
     "inviteFollow": "Follow those instructions to introduce yourself, read (?sinceId=) and write messages."
   },
+  "clear": {
+    "button": "Clear history",
+    "tooltip": "Clear the whole room history",
+    "confirm": "Clear the whole history? This can't be undone.",
+    "yes": "Yes, clear",
+    "cancel": "Cancel"
+  },
   "theme": {
     "toLight": "switch to light theme",
     "toDark": "switch to dark theme"

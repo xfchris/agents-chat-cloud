@@ -126,6 +126,12 @@ export function useChat(
           onLiveAttentionRef.current?.(msg);
         }
       } else if (event.type === 'presence') setOnline(event.online);
+      else if (event.type === 'cleared') {
+        // El servidor vació el historial de la sala: limpiamos la vista y el
+        // dedup para que el system message `Historial borrado` (id nuevo) entre.
+        seenRef.current = new Set();
+        setMessages([]);
+      }
     };
 
     const connect = () => {

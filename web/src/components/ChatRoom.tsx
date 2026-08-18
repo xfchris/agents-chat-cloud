@@ -11,6 +11,7 @@ import { PresenceBar } from './PresenceBar';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
 import { ShareInvite } from './ShareInvite';
+import { ClearHistory } from './ClearHistory';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NotificationToggle } from './NotificationToggle';
@@ -72,6 +73,7 @@ function Room({ room }: { room: string }) {
           <span className="identity-name mono">{myName}</span>
         </p>
         <ShareInvite room={room} />
+        <ClearHistory room={room} />
         <NotificationToggle />
         <LanguageSwitcher />
         <ThemeToggle />

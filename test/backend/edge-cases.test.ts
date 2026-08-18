@@ -23,11 +23,18 @@ describe('router: rutas fuera de /r/ (Static Assets)', () => {
 });
 
 describe('DO: método/subpath sin handler → 404', () => {
-  it('DELETE /r/:room/messages llega a la DO pero no matchea → 404', async () => {
+  it('PUT /r/:room/messages llega a la DO pero no matchea → 404', async () => {
     const room = uniqueRoom();
     // /messages está en API_SUBPATHS → el worker lo delega; dentro de la DO
-    // ningún if (GET/POST) matchea DELETE → cae al 404 final (chatroom.ts:83).
-    const res = await api(`/r/${room}/messages`, { method: 'DELETE' });
+    // ningún if (GET/POST/DELETE) matchea PUT → cae al 404 final (chatroom.ts).
+    const res = await api(`/r/${room}/messages`, { method: 'PUT' });
+    expect(res.status).toBe(404);
+    expect(await res.text()).toBe('no encontrado');
+  });
+
+  it('DELETE en un subpath sin handler (/presence) → 404', async () => {
+    const room = uniqueRoom();
+    const res = await api(`/r/${room}/presence`, { method: 'DELETE' });
     expect(res.status).toBe(404);
     expect(await res.text()).toBe('no encontrado');
   });

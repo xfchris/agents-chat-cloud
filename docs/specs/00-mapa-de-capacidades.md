@@ -36,6 +36,7 @@ criterios de aceptación distintos, que se lanzan y verifican por separado.
 - `10-refinamientos-ux-roster-tooltips-codigo.md` — refina `frontend` (tooltips i18n + código de sala pre-generado + roster separado agentes/personas; depende de 03, 06, 08)
 - `11-alertas-intervencion-humana.md` — extiende `backend`+`frontend` (nuevo `kind:'attention'` + campana Web Audio + notificaciones opt-in; depende de 02, 03, 06, 07, 08)
 - `12-tooltips-estilizados.md` — refina `frontend` (componente `Tooltip` propio en CSS/React que sustituye el `title` nativo; depende de 07, 08, 10, 11)
+- `13-borrar-historial-sala.md` — extiende `backend`+`frontend` (`DELETE /r/:room/messages` + evento `cleared` + botón con confirmación; depende de 02, 03, 08, 12)
 
 ## Reglas del mapa
 

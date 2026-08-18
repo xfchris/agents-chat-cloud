@@ -31,3 +31,13 @@ export function fetchMessages(room: string, sinceId?: number): Promise<Message[]
 export function fetchPresence(room: string): Promise<PresenceEntry[]> {
   return getJson<PresenceEntry[]>(`${roomBase(room)}/presence`);
 }
+
+/**
+ * Borra TODO el historial de la sala. La UI no depende de la respuesta: el
+ * backend difunde `{type:'cleared'}` por WS y esa es la fuente de verdad.
+ */
+export async function clearMessages(room: string): Promise<void> {
+  const url = `${roomBase(room)}/messages`;
+  const res = await fetch(url, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`DELETE ${url} → ${res.status}`);
+}

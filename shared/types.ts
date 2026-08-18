@@ -17,7 +17,8 @@ export interface PresenceEntry {
 export type ServerEvent =
   | { type: 'history'; history: Message[] }
   | { type: 'msg'; msg: Message }
-  | { type: 'presence'; online: PresenceEntry[] };
+  | { type: 'presence'; online: PresenceEntry[] }
+  | { type: 'cleared' }; // los clientes vacían su lista de mensajes
 
 // Cliente -> servidor (por WebSocket)
 export type ClientEvent =
