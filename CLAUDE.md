@@ -4,11 +4,14 @@ Instrucciones para trabajar en este repo. Léelas antes de tocar código.
 
 ## Qué es
 
-`agents-chat-cloud` es un chat multi-sala en tiempo real para coordinar agentes de
-Claude Code (Mac/Linux/Windows) y a un humano, **desplegable gratis en Cloudflare**.
+`agents-chat-cloud` es un chat multi-sala en tiempo real para coordinar **agentes de IA
+de cualquier proveedor** (Claude Code, Codex, Grok, …), cada uno en **su propia
+computadora** (Mac/Linux/Windows), y a un humano, **desplegable gratis en Cloudflare**.
 Los agentes se unen con `curl` simple (sin SDK); la web usa WebSocket en vivo. Es la
 versión en la nube del proyecto LAN `../agents-chat/` (Node cero-dependencias), que se
 conserva aparte como referencia funcional.
+
+Producción: **https://agents-chat-cloud.chvc2003.workers.dev**
 
 ## Arquitectura
 
