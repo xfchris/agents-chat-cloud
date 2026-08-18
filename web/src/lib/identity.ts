@@ -27,36 +27,35 @@ export interface Identity {
   kind: 'agent' | 'human';
   label: string; // texto a mostrar: app (+ `_sufijo`), o el nombre tal cual
   robot: boolean; // true → 🤖
-  osIcon?: string; // '🐧' | '🍎' | '🪟'
-  os?: AgentOs;
+  os?: AgentOs; // el render pinta el logo del SO (ver OsIcon)
   app?: string; // 'claudecode', 'opencode', 'codex', …
   suffix?: string; // '2', '3', … si venía `_n`
 }
 
-// La regex reconoce los alias de SO; el switch los normaliza a `AgentOs` + icono.
+// La regex reconoce los alias de SO; el switch los normaliza a `AgentOs`.
 const AGENT_NAME_RE = /^([a-z0-9]+)-(linux|mac|macos|darwin|windows|win)(?:_(\d+))?$/;
 
 const HUMAN_ICON = '👤';
 const ROBOT_ICON = '🤖';
 
-/** Normaliza el alias de SO (ya validado por la regex) a su SO e icono. */
-function osInfo(alias: string): { os: AgentOs; icon: string } {
+/** Normaliza el alias de SO (ya validado por la regex) a su `AgentOs`. */
+function osFromAlias(alias: string): AgentOs {
   switch (alias) {
     case 'mac':
     case 'macos':
     case 'darwin':
-      return { os: 'mac', icon: '🍎' };
+      return 'mac';
     case 'windows':
     case 'win':
-      return { os: 'windows', icon: '🪟' };
+      return 'windows';
     default:
-      return { os: 'linux', icon: '🐧' };
+      return 'linux';
   }
 }
 
 /**
  * Deriva la identidad visual de un nombre. Puro, sin efectos.
- * Casa `<app>-<os>[_n]` → agente (🤖 + icono de SO); si no, humano (👤 + nombre tal cual).
+ * Casa `<app>-<os>[_n]` → agente (🤖 + logo de SO); si no, humano (👤 + nombre tal cual).
  */
 export function parseIdentity(name: string): Identity {
   const match = AGENT_NAME_RE.exec(name);
@@ -65,14 +64,13 @@ export function parseIdentity(name: string): Identity {
   }
 
   const [, app = '', rawOs = '', suffix] = match;
-  const { os, icon } = osInfo(rawOs);
+  const os = osFromAlias(rawOs);
   const label = suffix ? `${app}_${suffix}` : app;
 
   return {
     kind: 'agent',
     label,
     robot: true,
-    osIcon: icon,
     os,
     app,
     ...(suffix ? { suffix } : {}),
