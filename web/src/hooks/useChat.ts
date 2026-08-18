@@ -36,8 +36,17 @@ function withJitter(ms: number): number {
  * `name` alimenta presencia y envío; cambiarlo reanuncia (con debounce) sin
  * reconectar. Expone `myName` (nombre efectivo) como fuente única para marcar
  * mensajes y presencia propios.
+ *
+ * `onLiveAttention` se invoca solo con mensajes `kind:'attention'` que llegan en
+ * vivo (evento `{type:'msg'}`, no en el `history` inicial) de OTRO participante:
+ * es el gancho de la alerta (campana/notificación). Nunca se dispara por el
+ * historial ni por los mensajes propios.
  */
-export function useChat(room: string, name: string): Chat {
+export function useChat(
+  room: string,
+  name: string,
+  onLiveAttention?: (msg: Message) => void,
+): Chat {
   const myName = effectiveName(name);
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -54,6 +63,12 @@ export function useChat(room: string, name: string): Chat {
   useEffect(() => {
     nameRef.current = myName;
   }, [myName]);
+
+  // Gancho de alerta por referencia: cambiarlo no recrea la conexión ni el efecto.
+  const onLiveAttentionRef = useRef(onLiveAttention);
+  useEffect(() => {
+    onLiveAttentionRef.current = onLiveAttention;
+  }, [onLiveAttention]);
 
   const send = useCallback((event: ClientEvent) => {
     const ws = wsRef.current;
@@ -101,8 +116,16 @@ export function useChat(room: string, name: string): Chat {
         return;
       }
       if (event.type === 'history') event.history.forEach(ingest);
-      else if (event.type === 'msg') ingest(event.msg);
-      else if (event.type === 'presence') setOnline(event.online);
+      else if (event.type === 'msg') {
+        const msg = event.msg;
+        // Solo un mensaje realmente nuevo (no un duplicado de reconexión) y ajeno
+        // dispara la alerta; el historial no pasa por aquí, así que nunca la lanza.
+        const isNew = !seenRef.current.has(msg.id);
+        ingest(msg);
+        if (isNew && msg.kind === 'attention' && msg.name !== nameRef.current) {
+          onLiveAttentionRef.current?.(msg);
+        }
+      } else if (event.type === 'presence') setOnline(event.online);
     };
 
     const connect = () => {

@@ -1,14 +1,18 @@
+import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import type { Message } from 'shared/types';
 import { useChat } from '../hooks/useChat';
 import { isValidRoom } from '../lib/room';
 import { readStoredName } from '../lib/identity';
+import { fireAttentionAlert } from '../lib/attention';
 import { PresenceBar } from './PresenceBar';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
 import { ShareInvite } from './ShareInvite';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { NotificationToggle } from './NotificationToggle';
 
 const STATUS_KEY = {
   connecting: 'room.connecting',
@@ -43,7 +47,10 @@ function Room({ room }: { room: string }) {
   const { t } = useTranslation();
   // Nick fijo: se elige en la Landing y se lee una sola vez. No se edita en la sala.
   const name = readStoredName();
-  const { messages, online, status, myName, sendMessage } = useChat(room, name);
+  // Alerta al llegar en vivo un mensaje de intervención ajeno: campana siempre y,
+  // según preferencia/permiso/foco, notificación del navegador.
+  const onLiveAttention = useCallback((msg: Message) => fireAttentionAlert(msg, t), [t]);
+  const { messages, online, status, myName, sendMessage } = useChat(room, name, onLiveAttention);
 
   return (
     <main className="room">
@@ -61,6 +68,7 @@ function Room({ room }: { room: string }) {
           <span className="identity-name mono">{myName}</span>
         </p>
         <ShareInvite room={room} />
+        <NotificationToggle />
         <LanguageSwitcher />
         <ThemeToggle />
         <Link className="ghost-link" to="/">

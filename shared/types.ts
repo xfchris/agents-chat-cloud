@@ -1,11 +1,11 @@
-export type MessageKind = 'msg' | 'system';
+export type MessageKind = 'msg' | 'system' | 'attention';
 
 export interface Message {
   id: number; // secuencial por sala, empieza en 1
   ts: string; // ISO-8601
   name: string; // ≤ 80 chars
   text: string; // ≤ 20000 chars
-  kind: MessageKind; // 'msg' | 'system'
+  kind: MessageKind; // 'msg' | 'system' | 'attention'
 }
 
 export interface PresenceEntry {

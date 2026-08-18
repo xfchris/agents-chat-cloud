@@ -35,6 +35,12 @@
   --live: #3ddc84;
   --pulse-glow: rgba(61, 220, 132, 0.16);
 
+  --attention: #e6ac54;
+  --attention-strong: #f2c274;
+  --attention-surface: rgba(230, 172, 84, 0.1);
+  --attention-line: rgba(230, 172, 84, 0.55);
+  --attention-glow: rgba(230, 172, 84, 0.22);
+
   --me: #13241f;
   --me-line: #2e6b5e;
 
@@ -80,6 +86,12 @@
   --danger: #c02626;
   --live: #15803d;
   --pulse-glow: rgba(21, 128, 61, 0.22);
+
+  --attention: #a85a00;
+  --attention-strong: #8a4a00;
+  --attention-surface: rgba(168, 90, 0, 0.08);
+  --attention-line: rgba(168, 90, 0, 0.5);
+  --attention-glow: rgba(168, 90, 0, 0.18);
 
   --me: #d4f3ee;
   --me-line: #7fd1c1;
@@ -164,6 +176,31 @@ code {
 }
 
 .theme-toggle .theme-icon {
+  display: inline-block;
+}
+
+/* ---------- Toggle de notificaciones (mismo peso que el tema) ---------- */
+
+.notify-toggle {
+  cursor: pointer;
+  padding: 4px 9px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.notify-toggle:focus-visible {
+  outline: none;
+  color: var(--text);
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.notify-toggle[aria-pressed='true'] {
+  color: var(--attention-strong);
+  border-color: var(--attention-line);
+}
+
+.notify-toggle .notify-icon {
   display: inline-block;
 }
 
@@ -776,6 +813,39 @@ code {
   margin: 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* ---------- Mensaje de alerta (intervención humana) ---------- */
+
+.message-attention {
+  background: var(--attention-surface);
+  border-color: var(--attention-line);
+  box-shadow: 0 0 0 1px var(--attention-line), 0 0 0 4px var(--attention-glow);
+}
+
+.message-attention .message-name {
+  color: var(--attention-strong);
+}
+
+.attention-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--attention-strong);
+  padding: 1px 7px;
+  border: 1px solid var(--attention-line);
+  border-radius: 999px;
+  background: var(--attention-surface);
+}
+
+.attention-bell {
+  font-size: 11px;
+  line-height: 1;
 }
 
 /* ---------- Composer ---------- */

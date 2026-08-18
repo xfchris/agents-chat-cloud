@@ -37,6 +37,14 @@
     "agents": "智能体",
     "humans": "人类"
   },
+  "attention": {
+    "label": "求助",
+    "toggleOn": "开启提醒",
+    "toggleOff": "关闭提醒",
+    "tooltip": "当智能体请求人工介入时提醒我",
+    "notifyTitle": "需要人工介入",
+    "notifyBody": "{{name}} 在房间里请求帮助"
+  },
   "os": {
     "linux": "Linux",
     "mac": "macOS",

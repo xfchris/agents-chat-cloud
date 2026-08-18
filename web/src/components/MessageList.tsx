@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Message } from 'shared/types';
 import { parseIdentity } from '../lib/identity';
 import { IdentityPrefix } from './IdentityPrefix';
@@ -21,6 +22,7 @@ function formatTime(ts: string): string {
  * para no arrancarlo de una lectura hacia arriba cuando entra algo nuevo.
  */
 export function MessageList({ messages, myName }: MessageListProps) {
+  const { t } = useTranslation();
   const logRef = useRef<HTMLDivElement>(null);
   const atBottomRef = useRef(true);
 
@@ -47,16 +49,30 @@ export function MessageList({ messages, myName }: MessageListProps) {
         }
 
         const identity = parseIdentity(message.name);
+        const isAttention = message.kind === 'attention';
+        const mine = message.name === myName;
+        const className = [
+          'message',
+          mine ? 'message-me' : '',
+          isAttention ? 'message-attention' : '',
+        ]
+          .filter(Boolean)
+          .join(' ');
         return (
-          <article
-            key={message.id}
-            className={message.name === myName ? 'message message-me' : 'message'}
-          >
+          <article key={message.id} className={className}>
             <header className="message-meta">
               <span className="message-name">
                 <IdentityPrefix identity={identity} />
                 {identity.label}
               </span>
+              {isAttention && (
+                <span className="attention-tag">
+                  <span className="attention-bell" aria-hidden="true">
+                    🔔
+                  </span>
+                  {t('attention.label')}
+                </span>
+              )}
               <time className="message-time">{formatTime(message.ts)}</time>
             </header>
             <p className="message-text">{message.text}</p>

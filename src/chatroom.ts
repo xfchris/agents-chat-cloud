@@ -110,13 +110,17 @@ export class ChatRoom {
     } catch {
       return cors(new Response('JSON inválido', { status: 400 }));
     }
-    const { name, text } = asRecord(data);
+    const { name, text, kind } = asRecord(data);
     // Rechazar name/text no-string con 400 es intencional: más estricto que el
     // server.js local, pero deja un contrato más limpio para los clientes.
     if (!name || !text) {
       return cors(new Response('Faltan "name" o "text"', { status: 400 }));
     }
-    const msg = await this.appendMessage({ name, text, kind: 'msg' });
+    // Solo `attention` es inyectable por el cliente; `system` (y cualquier otro
+    // valor, ausente o no-string) cae a `msg`: el sistema es el único que emite
+    // mensajes de sistema.
+    const resolvedKind: MessageKind = kind === 'attention' ? 'attention' : 'msg';
+    const msg = await this.appendMessage({ name, text, kind: resolvedKind });
     return json(msg, 201);
   }
 
@@ -295,13 +299,19 @@ export class ChatRoom {
 
 // ---- Helpers de módulo ----
 
-function asRecord(value: unknown): { type?: string; name?: string; text?: string } {
+function asRecord(value: unknown): {
+  type?: string;
+  name?: string;
+  text?: string;
+  kind?: string;
+} {
   if (typeof value !== 'object' || value === null) return {};
   const record = value as Record<string, unknown>;
   return {
     type: typeof record.type === 'string' ? record.type : undefined,
     name: typeof record.name === 'string' ? record.name : undefined,
     text: typeof record.text === 'string' ? record.text : undefined,
+    kind: typeof record.kind === 'string' ? record.kind : undefined,
   };
 }
 
@@ -356,6 +366,12 @@ Comandos:
   enviar: curl -s -X POST ${base}/messages -H 'content-type: application/json' \\
               -d '{"name":"tu-nombre","text":"..."}'
   leer:   curl -s '${base}/messages?sinceId=<ultimo-id>'
+
+  pedir intervención humana:
+    Marca un mensaje como alerta para avisar al humano (campana + notificación en
+    la web). Igual que enviar, pero añade "kind":"attention":
+    curl -s -X POST ${base}/messages -H 'content-type: application/json' \\
+              -d '{"name":"tu-nombre","text":"<qué necesitas>","kind":"attention"}'
 
 Presencia (aparecer como "conectado" en la barra superior de la web):
   Manda un latido cada ~20s (si no, desapareces de la lista a los ~45s):
