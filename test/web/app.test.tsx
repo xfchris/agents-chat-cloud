@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from '../../web/src/App';
 import { ROOM_RE } from 'shared/constants';
@@ -122,8 +122,10 @@ describe('ChatRoom (ruta /r/:room)', () => {
       });
     });
 
-    expect(screen.getByText('(tú)')).toBeInTheDocument();
-    expect(screen.getByText('ana').closest('li')).toHaveClass('chip-me');
+    // Acotado a la lista de presencia: el nick read-only también muestra «ana».
+    const presence = within(screen.getByLabelText('Participantes en línea'));
+    expect(presence.getByText('(tú)')).toBeInTheDocument();
+    expect(presence.getByText('ana').closest('li')).toHaveClass('chip-me');
   });
 
   it('envía un mensaje por el Composer cuando está conectado', async () => {
@@ -149,22 +151,22 @@ describe('ChatRoom (ruta /r/:room)', () => {
     expect(screen.getByRole('button', { name: 'Enviar' })).toBeDisabled();
   });
 
-  it('nombre vacío en el input usa `humano` como nombre efectivo (chip propio)', async () => {
-    const user = userEvent.setup();
-    localStorage.setItem('chatName', 'ana');
+  it('sin nombre almacenado usa `humano` como nombre efectivo (chip propio), sin input editable', async () => {
+    // Sin `chatName` en localStorage: readStoredName() = `humano`.
     renderWithRouter(<App />, { route: '/r/sala-1' });
     act(() => MockWebSocket.last.open());
 
-    // Vaciar el nombre en la cabecera.
-    const nameInput = screen.getByLabelText('Tu nombre');
-    await user.clear(nameInput);
+    // El nick es read-only: no hay input editable en la cabecera.
+    expect(screen.queryByLabelText('Tu nombre')).not.toBeInTheDocument();
 
     act(() => {
       MockWebSocket.last.emit({ type: 'presence', online: [makePresence('humano')] });
     });
 
+    // Acotado a la lista de presencia: el nick read-only también muestra «humano».
+    const presence = within(screen.getByLabelText('Participantes en línea'));
     await waitFor(() =>
-      expect(screen.getByText('humano').closest('li')).toHaveClass('chip-me'),
+      expect(presence.getByText('humano').closest('li')).toHaveClass('chip-me'),
     );
   });
 

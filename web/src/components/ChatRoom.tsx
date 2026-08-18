@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useChat } from '../hooks/useChat';
 import { isValidRoom } from '../lib/room';
-import { DEFAULT_NAME, readStoredName, storeName } from '../lib/identity';
+import { readStoredName } from '../lib/identity';
 import { PresenceBar } from './PresenceBar';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
+import { ShareInvite } from './ShareInvite';
 
 const STATUS_LABEL = {
   connecting: 'enlazando…',
@@ -38,13 +38,9 @@ export function ChatRoom() {
 }
 
 function Room({ room }: { room: string }) {
-  const [name, setName] = useState(readStoredName);
+  // Nick fijo: se elige en la Landing y se lee una sola vez. No se edita en la sala.
+  const name = readStoredName();
   const { messages, online, status, myName, sendMessage } = useChat(room, name);
-
-  const onNameChange = (value: string) => {
-    setName(value);
-    storeName(value);
-  };
 
   return (
     <main className="room">
@@ -57,16 +53,11 @@ function Room({ room }: { room: string }) {
           </span>
           <span className={`conn conn-${status}`}>{STATUS_LABEL[status]}</span>
         </div>
-        <label className="identity">
-          <span className="identity-label">emites como</span>
-          <input
-            className="identity-input"
-            value={name}
-            onChange={(event) => onNameChange(event.target.value)}
-            placeholder={DEFAULT_NAME}
-            aria-label="Tu nombre"
-          />
-        </label>
+        <p className="identity">
+          <span className="identity-label">tú</span>
+          <span className="identity-name mono">{myName}</span>
+        </p>
+        <ShareInvite room={room} />
         <Link className="ghost-link" to="/">
           salir
         </Link>

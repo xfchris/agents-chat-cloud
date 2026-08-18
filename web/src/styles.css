@@ -312,9 +312,9 @@ code {
 }
 
 .identity {
-  margin-left: auto;
+  margin: 0 0 0 auto;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
 }
 
@@ -326,19 +326,110 @@ code {
   color: var(--faint);
 }
 
-.identity-input {
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  color: var(--text);
-  border-radius: var(--radius-sm);
-  padding: 6px 11px;
-  font: inherit;
+.identity-name {
   font-size: 13px;
-  width: 170px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  color: var(--text);
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.identity-input:focus-visible {
+/* ---------- Compartir / invitar (firma: panel de transmisión) ---------- */
+
+.share {
+  position: relative;
+  display: flex;
+}
+
+.share-toggle {
+  cursor: pointer;
+}
+
+.share-toggle[aria-expanded='true'] {
+  color: var(--text);
+  border-color: var(--signal-dim);
+}
+
+.share-toggle:focus-visible {
+  outline: none;
+  color: var(--text);
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.share-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: min(340px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--signal-dim);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 48px -24px rgba(0, 0, 0, 0.9);
+}
+
+.share-action {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.share-action:hover {
+  background: var(--surface-2);
+  border-color: var(--line);
+}
+
+.share-action:focus-visible {
+  outline: none;
+  border-color: var(--signal-dim);
+  box-shadow: 0 0 0 3px var(--signal-glow);
+}
+
+.share-copied {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--signal-strong);
+}
+
+.share-agent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.share-invite-text {
+  width: 100%;
+  resize: none;
+  background: #05070b;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  color: var(--signal-strong);
+  font-size: 11.5px;
+  line-height: 1.5;
+  padding: 9px 11px;
+}
+
+.share-invite-text:focus-visible {
   outline: none;
   border-color: var(--signal-dim);
   box-shadow: 0 0 0 3px var(--signal-glow);
@@ -561,8 +652,8 @@ code {
   .identity {
     margin-left: 0;
   }
-  .identity-input {
-    width: 120px;
+  .identity-name {
+    max-width: 120px;
   }
   .message {
     max-width: 88%;
