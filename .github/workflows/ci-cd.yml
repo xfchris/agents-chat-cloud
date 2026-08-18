@@ -52,6 +52,27 @@ jobs:
       - name: Test web (cobertura)
         run: npm run test:web -- --coverage
 
+      # Sube cada cobertura a Codecov con su flag (backend/web), para el badge del
+      # README y los comentarios de cobertura en cada PR. `fail_ci_if_error: false`
+      # para que un fallo de subida (p. ej. red) no rompa el gate de tests.
+      - name: Upload backend coverage to Codecov
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/backend/lcov.info
+          flags: backend
+          name: backend
+          fail_ci_if_error: false
+
+      - name: Upload web coverage to Codecov
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/web/lcov.info
+          flags: web
+          name: web
+          fail_ci_if_error: false
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

@@ -1,5 +1,9 @@
 # agents-chat-cloud
 
+**Cobertura:**
+backend [![codecov backend](https://codecov.io/gh/xfchris/agents-chat-cloud/branch/main/graph/badge.svg?flag=backend)](https://codecov.io/gh/xfchris/agents-chat-cloud)
+· web [![codecov web](https://codecov.io/gh/xfchris/agents-chat-cloud/branch/main/graph/badge.svg?flag=web)](https://codecov.io/gh/xfchris/agents-chat-cloud)
+
 Chat multi-sala en tiempo real para **coordinar agentes de IA y un humano**,
 desplegable gratis en Cloudflare. Los agentes se unen con `curl` simple (sin SDK); la
 web observa y participa en vivo por WebSocket.
@@ -107,9 +111,12 @@ El destino es `https://agents-chat-cloud.<tu-subdominio>.workers.dev`.
 
 - **`test`** (en cada `pull_request` y en `push`): `npm ci` → `typecheck` → `lint` →
   `test:backend --coverage` (provider **istanbul**, obligado por pool-workers) →
-  `test:web --coverage` (provider **v8**) → instala Chromium de Playwright →
-  `test:e2e`. El **gate de cobertura ≥90%** en las 4 métricas (líneas, funciones,
-  ramas, sentencias) rompe el job si baja; el umbral es inclusivo (90.0% pasa).
+  `test:web --coverage` (provider **v8**) → sube cada cobertura a **Codecov** con su
+  flag (`backend`/`web`) → instala Chromium de Playwright → `test:e2e`. El **gate de
+  cobertura ≥90%** en las 4 métricas (líneas, funciones, ramas, sentencias) rompe el
+  job si baja; el umbral es inclusivo (90.0% pasa). La subida a Codecov no rompe el
+  job si falla (`fail_ci_if_error: false`); alimenta los badges del README y los
+  comentarios de cobertura en los PR.
 - **`deploy`** (`needs: test`, solo `if: github.ref == 'refs/heads/main'`): `npm ci` →
   `npm run build` → `cloudflare/wrangler-action@v3` con `command: deploy`. Un PR nunca
   despliega; solo `main` con `test` en verde publica en `*.workers.dev`.
@@ -123,6 +130,9 @@ Estos pasos no se configuran desde el repo; los hace el operador en GitHub:
    - `CLOUDFLARE_API_TOKEN`: token de Cloudflare con permiso **Edit Cloudflare
      Workers** (solo ese permiso; nada de más).
    - `CLOUDFLARE_ACCOUNT_ID`: el Account ID del dashboard de Cloudflare.
+   - `CODECOV_TOKEN`: token del repo en [codecov.io](https://about.codecov.io/) (tras
+     conectar el repositorio ahí con la cuenta de GitHub). Necesario para que el paso de
+     subida de cobertura publique los datos de los badges.
 2. **Branch protection en `main`** (Settings → Branches → Add branch ruleset o
    protection rule para `main`):
    - Exige **status check** `test` en verde antes de poder mergear (Require status
