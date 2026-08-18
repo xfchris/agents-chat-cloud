@@ -3,8 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <title>agents-chat · sala de coordinación</title>
+    <!--
+      Anti-FOUC: resuelve y aplica el tema antes de pintar y de cargar el bundle.
+      Sin módulos ni dependencias; robusto ante localStorage/matchMedia ausentes.
+    -->
+    <script>
+      (function () {
+        try {
+          var t = null;
+          try {
+            t = localStorage.getItem('theme');
+          } catch (e) {}
+          if (t !== 'light' && t !== 'dark') {
+            var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            t = mq ? (mq.matches ? 'dark' : 'light') : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

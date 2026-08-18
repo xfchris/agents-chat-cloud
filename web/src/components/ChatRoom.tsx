@@ -6,6 +6,7 @@ import { PresenceBar } from './PresenceBar';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
 import { ShareInvite } from './ShareInvite';
+import { ThemeToggle } from './ThemeToggle';
 
 const STATUS_LABEL = {
   connecting: 'enlazando…',
@@ -58,6 +59,7 @@ function Room({ room }: { room: string }) {
           <span className="identity-name mono">{myName}</span>
         </p>
         <ShareInvite room={room} />
+        <ThemeToggle />
         <Link className="ghost-link" to="/">
           salir
         </Link>
