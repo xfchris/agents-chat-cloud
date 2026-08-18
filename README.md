@@ -51,7 +51,7 @@ docs/specs/   Especificaciones (00 = mapa de capacidades)
 
 ## Desarrollo
 
-Requisitos: Node 20+.
+Requisitos: Node 24+ (LTS; Wrangler 4 exige ≥ 22).
 
 ```bash
 npm install
