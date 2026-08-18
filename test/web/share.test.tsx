@@ -61,13 +61,15 @@ describe('ShareInvite — abrir/cerrar popover', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('el botón compartir expone un title traducido (tooltip.share)', () => {
+  it('el botón compartir expone un tooltip traducido (tooltip.share)', () => {
     render(<ShareInvite room="sala-1" />);
 
-    expect(screen.getByRole('button', { name: 'compartir' })).toHaveAttribute(
-      'title',
-      'Compartir sala',
-    );
+    // El `title` nativo se sustituyó por un `<Tooltip>` propio (burbuja role=tooltip).
+    const tip = screen.getByRole('tooltip', { hidden: true });
+    expect(tip).toHaveTextContent('Compartir sala');
+    // Control de cabecera → placement `bottom`.
+    expect(tip).toHaveClass('tt-bottom');
+    expect(screen.getByRole('button', { name: 'compartir' })).not.toHaveAttribute('title');
   });
 
   it('cierra con Escape', async () => {

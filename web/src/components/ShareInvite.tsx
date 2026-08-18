@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
+import { Tooltip } from './Tooltip';
 
 const CONFIRM_MS = 1800;
 
@@ -75,16 +76,17 @@ export function ShareInvite({ room }: { room: string }) {
 
   return (
     <div className="share" ref={rootRef}>
-      <button
-        type="button"
-        className="ghost-link share-toggle"
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        title={t('tooltip.share')}
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        {t('share.toggle')}
-      </button>
+      <Tooltip label={t('tooltip.share')} placement="bottom">
+        <button
+          type="button"
+          className="ghost-link share-toggle"
+          aria-expanded={open}
+          aria-haspopup="dialog"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          {t('share.toggle')}
+        </button>
+      </Tooltip>
 
       {open && (
         <div className="share-popover" role="dialog" aria-label={t('share.dialogLabel')}>

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LNGS, type Lng } from '../i18n';
+import { Tooltip } from './Tooltip';
 
 // Endónimos: cada idioma se nombra en sí mismo, no se traduce.
 const LABELS: Record<Lng, string> = {
@@ -26,19 +27,20 @@ export function LanguageSwitcher() {
       <span className="lang-switch-icon" aria-hidden="true">
         🌐
       </span>
-      <select
-        className="lang-switch-select"
-        aria-label={t('language.label')}
-        title={t('tooltip.language')}
-        value={active}
-        onChange={(event) => void i18n.changeLanguage(event.target.value)}
-      >
-        {SUPPORTED_LNGS.map((lng) => (
-          <option key={lng} value={lng}>
-            {LABELS[lng]}
-          </option>
-        ))}
-      </select>
+      <Tooltip label={t('tooltip.language')} placement="bottom">
+        <select
+          className="lang-switch-select"
+          aria-label={t('language.label')}
+          value={active}
+          onChange={(event) => void i18n.changeLanguage(event.target.value)}
+        >
+          {SUPPORTED_LNGS.map((lng) => (
+            <option key={lng} value={lng}>
+              {LABELS[lng]}
+            </option>
+          ))}
+        </select>
+      </Tooltip>
     </label>
   );
 }

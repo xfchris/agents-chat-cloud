@@ -53,6 +53,14 @@
 
   --radius: 12px;
   --radius-sm: 8px;
+
+  /* Tooltip: look «oscuro compacto» constante en ambos temas (legible sobre fondo
+     claro y oscuro; se separa del fondo con hairline + sombra). No se redefine en
+     el tema claro a propósito. */
+  --tooltip-bg: #232834;
+  --tooltip-fg: #eef2f8;
+  --tooltip-border: rgba(255, 255, 255, 0.08);
+  --tooltip-shadow: 0 6px 20px rgba(2, 6, 23, 0.35);
 }
 
 /*
@@ -991,5 +999,90 @@ code {
   }
   .message {
     max-width: 88%;
+  }
+}
+
+/* ---------- Tooltip propio (SPEC 12) ---------- */
+
+/* Envoltorio en línea que ancla la burbuja posicionada. */
+.tt-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Burbuja oscura compacta. Permanece en el DOM; oculta por defecto y visible con
+   `[data-open]` (estado JS: jsdom no aplica `:hover` y así es testeable). */
+.tt-bubble {
+  position: absolute;
+  left: 50%;
+  z-index: 50;
+  max-width: 220px;
+  width: max-content;
+  padding: 6px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--tooltip-border);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  box-shadow: var(--tooltip-shadow);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 130ms ease-out,
+    transform 130ms ease-out;
+}
+
+/* Flecha de 6px del color del fondo, centrada bajo/sobre la burbuja. */
+.tt-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  transform: translateX(-50%);
+}
+
+/* Placement `top`: encima del disparador; entra deslizando desde arriba. */
+.tt-top {
+  bottom: calc(100% + 8px);
+  transform: translate(-50%, 3px);
+}
+.tt-top::after {
+  top: 100%;
+  border-top-color: var(--tooltip-bg);
+}
+
+/* Placement `bottom`: debajo (cabecera, evita recorte superior); entra desde abajo. */
+.tt-bottom {
+  top: calc(100% + 8px);
+  transform: translate(-50%, -3px);
+}
+.tt-bottom::after {
+  bottom: 100%;
+  border-bottom-color: var(--tooltip-bg);
+}
+
+/* Visible: aparece con retardo al hover (~350ms) y se oculta al instante. La
+   transición de salida no se retarda porque el retardo sólo aplica al estado
+   abierto. */
+.tt-bubble[data-open] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition-delay: 350ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-bubble {
+    transition: opacity 130ms ease-out;
+  }
+  .tt-top,
+  .tt-bottom,
+  .tt-bubble[data-open] {
+    transform: translateX(-50%);
   }
 }

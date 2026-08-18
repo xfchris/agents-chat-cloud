@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { notifyEnabled, requestNotifyPermission, setNotifyEnabled } from '../lib/notify';
+import { Tooltip } from './Tooltip';
 
 /**
  * Control de la cabecera para activar/desactivar las notificaciones del navegador
@@ -28,17 +29,18 @@ export function NotificationToggle() {
   const label = enabled ? t('attention.toggleOff') : t('attention.toggleOn');
 
   return (
-    <button
-      type="button"
-      className="ghost-link notify-toggle"
-      onClick={toggle}
-      aria-pressed={enabled}
-      aria-label={label}
-      title={t('attention.tooltip')}
-    >
-      <span className="notify-icon" aria-hidden="true">
-        {enabled ? '🔔' : '🔕'}
-      </span>
-    </button>
+    <Tooltip label={t('attention.tooltip')} placement="bottom">
+      <button
+        type="button"
+        className="ghost-link notify-toggle"
+        onClick={toggle}
+        aria-pressed={enabled}
+        aria-label={label}
+      >
+        <span className="notify-icon" aria-hidden="true">
+          {enabled ? '🔔' : '🔕'}
+        </span>
+      </button>
+    </Tooltip>
   );
 }

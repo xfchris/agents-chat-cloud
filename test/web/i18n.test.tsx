@@ -207,15 +207,16 @@ describe('i18n · detección y fallback', () => {
 });
 
 describe('i18n · textos nuevos de SPEC 10 se traducen al cambiar de idioma', () => {
-  it('el title del selector de idioma sale de i18n y cambia con el idioma', async () => {
+  it('el tooltip del selector de idioma sale de i18n y cambia con el idioma', async () => {
     render(<LanguageSwitcher />);
-    const select = () => screen.getByRole('combobox');
+    const tip = () => screen.getByRole('tooltip', { hidden: true });
 
-    // Arranca en `es`: title = tooltip.language.
-    expect(select()).toHaveAttribute('title', 'Cambiar idioma');
+    // Arranca en `es`: burbuja = tooltip.language. El `title` nativo desapareció.
+    expect(tip()).toHaveTextContent('Cambiar idioma');
+    expect(screen.getByRole('combobox')).not.toHaveAttribute('title');
 
     await switchTo('en');
-    expect(select()).toHaveAttribute('title', 'Change language');
+    expect(tip()).toHaveTextContent('Change language');
   });
 
   it('los encabezados del roster (Agentes/Personas) se traducen al cambiar de idioma', async () => {
@@ -244,14 +245,14 @@ describe('i18n · textos nuevos de SPEC 10 se traducen al cambiar de idioma', ()
       />,
     );
 
-    // Español: title del prefijo de tipo.
-    expect(screen.getByTitle('Agente')).toBeInTheDocument();
-    expect(screen.getByTitle('Persona')).toBeInTheDocument();
+    // Español: burbuja del prefijo de tipo (ya no un `title` nativo).
+    expect(screen.getByText('Agente')).toHaveAttribute('role', 'tooltip');
+    expect(screen.getByText('Persona')).toHaveAttribute('role', 'tooltip');
 
     await switchTo('en');
-    expect(screen.getByTitle('Agent')).toBeInTheDocument();
-    expect(screen.getByTitle('Person')).toBeInTheDocument();
-    expect(screen.queryByTitle('Agente')).toBeNull();
+    expect(screen.getByText('Agent')).toHaveAttribute('role', 'tooltip');
+    expect(screen.getByText('Person')).toHaveAttribute('role', 'tooltip');
+    expect(screen.queryByText('Agente')).toBeNull();
   });
 });
 

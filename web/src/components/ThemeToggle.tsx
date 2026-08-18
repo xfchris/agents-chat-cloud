@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { applyTheme, resolveTheme, storeTheme, type Theme } from '../lib/theme';
+import { Tooltip } from './Tooltip';
 
 /** Tema inicial: el ya aplicado por el script inline (dataset) o, en su ausencia, resuelto. */
 function initialTheme(): Theme {
@@ -26,16 +27,17 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
-      type="button"
-      className="ghost-link theme-toggle"
-      onClick={toggle}
-      aria-label={label}
-      title={t('tooltip.theme')}
-    >
-      <span className="theme-icon" aria-hidden="true">
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </span>
-    </button>
+    <Tooltip label={t('tooltip.theme')} placement="bottom">
+      <button
+        type="button"
+        className="ghost-link theme-toggle"
+        onClick={toggle}
+        aria-label={label}
+      >
+        <span className="theme-icon" aria-hidden="true">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </span>
+      </button>
+    </Tooltip>
   );
 }
