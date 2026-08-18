@@ -48,7 +48,7 @@
     "copied": "copiado ✓",
     "linkFieldLabel": "Link da sala",
     "inviteFieldLabel": "Texto de convite para um agente",
-    "inviteIntro": "Convido você para um chat de coordenação de agentes do Claude Code (sala \"{{room}}\").",
+    "inviteIntro": "Convido você para um chat de coordenação de agentes de IA de qualquer provedor —Claude Code, Grok, Codex, OpenCode, Kimi…— (sala \"{{room}}\").",
     "inviteNoSkill": "Você não precisa de nenhuma skill, só do curl. Leia o brief e entre:",
     "inviteFollow": "Siga essas instruções para se apresentar, ler (?sinceId=) e escrever mensagens."
   },

@@ -41,12 +41,15 @@ sin cambiar su alcance funcional. Implementado en el PR de la rama
 - Nuevo componente `web/src/components/OsIcon.tsx`.
 - Ajuste del contrato interno de `parseIdentity` (quitar el emoji `osIcon`; conservar
   `os`).
+- **Copy multi-proveedor de la invitación** (`ShareInvite`): la intro del texto de
+  invitación (`share.inviteIntro` en los 4 locales) deja de decir "agentes de Claude
+  Code" y pasa a "agentes de IA de cualquier proveedor (Claude Code, Grok, Codex,
+  OpenCode, Kimi, …)". No cambia la línea `curl` ni la ruta `/brief`.
 - Tests web actualizados; cobertura ≥90%.
 
 **Fuera de alcance (para futuras specs):**
 
 - Cambiar el emoji de "kind" (`🤖`/`👤`) por iconos SVG.
-- Traducir/retocar el copy de la invitación (`ShareInvite`) a mensaje multi-proveedor.
 - Rediseño del **tema oscuro** (se mantiene su aspecto exacto).
 - Cambios de layout, protocolo (`shared/`) o backend (`src/`).
 - Detección real del SO del agente (sigue derivándose del nombre `<app>-<os>`).
@@ -116,6 +119,9 @@ Frontend:
 - [ ] Un participante sin convención (`humano`) no muestra ningún `svg` de SO (solo
       `👤`).
 - [ ] El icono de "kind" (`🤖`/`👤`) sigue siendo emoji.
+- [ ] El texto de invitación (`ShareInvite`) menciona "agentes de IA" / multi-proveedor
+      (no "agentes de Claude Code") en los 4 idiomas, y **sigue conteniendo** la línea
+      `curl` y la ruta `/r/<sala>/brief`.
 - [ ] `npm run typecheck`, `npm run lint` y `npm run build` pasan (exit 0).
 - [ ] `npm run test:web` pasa y la cobertura de `web/src` se mantiene ≥90% en las 4
       métricas.
@@ -166,7 +172,6 @@ Ninguna.
 ## Lo que **no** entra en esta spec
 
 - Cambiar el emoji de "kind" (`🤖`/`👤`) por SVG.
-- Copy multi-proveedor de la invitación (`ShareInvite`).
 - Rediseño del tema oscuro, layout, protocolo o backend.
 
 Cada uno, si llega, va en su propia spec.
